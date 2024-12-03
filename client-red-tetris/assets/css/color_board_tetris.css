@@ -1,0 +1,31 @@
+.bg-green {
+    background-color: #00FB30;
+}
+
+.bg-purple {
+    background-color: #DD32FC;
+}
+
+.bg-yellow {
+    background-color: #FEFD32;
+}
+
+.bg-orange {
+    background-color: #FF7E15;
+}
+
+.bg-red {
+    background-color: #FF2B06;
+}
+
+.bg-cyan {
+    background-color: #70D5FE;
+}
+
+.bg-blue {
+    background-color: #1922FB;
+}
+
+.block {
+    border: 1px outset grey;
+}
