@@ -1,11 +1,17 @@
 <script setup>
 import {useGameManager} from "~/composables/useGameManager.js";
+import GameOverText from "~/components/GameOverText.vue";
+import {useGameStateStore} from "~/stores/gameState.js";
 
-const {tetrimino } = useGameManager();
+const gameManager = useGameManager();
+const gameStateStore = useGameStateStore();
+onMounted(() => {
+  gameManager.init();
+})
 </script>
 
 <template>
-  <div class="grid grid-cols-12 grid-rows-22 w-60 h-[30rem] bg-black">
+  <div class="grid grid-cols-12 grid-rows-22 w-60 h-[30rem] bg-black" v-if="!gameStateStore.gameOver">
     <!--    Header Tetris Board Game    -->
     <div v-for="index in 4" class="bg-[#666]" :class="{
       'left grid grid-rows-22 grid-cols-1': index == 1, // left
@@ -20,8 +26,11 @@ const {tetrimino } = useGameManager();
     </div>
 
     <!--    Tetris Board Game    -->
-    <Tetrimino :rotatePosition="tetrimino.rotatePosition.value" :mode="tetrimino.modeRotate.value" :color="tetrimino.color.value"/>
+    <Tetrimino />
+
+    <BlockBoard />
   </div>
+  <GameOverText v-else />
 </template>
 
 <style>

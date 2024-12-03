@@ -1,13 +1,11 @@
 <script setup>
-defineProps({
-  rotatePosition: Object,
-  color: String,
-  mode: String,
-})
+import {useTetriminoStore} from "~/stores/tetrimino.js";
+
+const tetriminoStore = useTetriminoStore();
 </script>
 
 <template>
-  <div v-for="block in rotatePosition[mode]" class="block" :class="`col-${block.col} row-${block.row} ${color}`"></div>
+  <div v-for="block in tetriminoStore.positions[tetriminoStore.modePosition]" class="block" :class="`col-${block.col} row-${block.row} ${tetriminoStore.refColor}`" v-if="tetriminoStore.positions"></div>
 </template>
 
 <style>

@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   ssr: false,
   modules: [
     '@nuxtjs/tailwindcss',
-    'nuxt-lodash'
+    'nuxt-lodash',
+    '@pinia/nuxt'
   ]
 })

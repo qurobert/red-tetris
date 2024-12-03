@@ -11,11 +11,16 @@
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.2",
+    "@pinia/nuxt": "^0.8.0",
     "nuxt": "^3.14.1592",
+    "pinia": "^2.2.8",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
     "nuxt-lodash": "^2.5.3"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

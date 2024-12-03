@@ -1,89 +1,61 @@
+import {useTetriminoStore} from "~/stores/tetrimino.js";
+import {useBoardStore} from "~/stores/board.js";
+import {useKeyboardManager} from "~/composables/useKeyboardManager.js";
 import {setInterval} from "#app/compat/interval.js";
-import {useTetrimino} from "~/composables/useTetrimino.js";
+import {useGameStateStore} from "~/stores/gameState.js";
 
 export const useGameManager = () => {
-    const tetrimino = useTetrimino('I');
+    const tetriminoStore = useTetriminoStore();
+    const boardStore = useBoardStore();
+    const gameState = useGameStateStore();
+    const letters = ['I', 'J', 'L', 'O', 'S', 'T', 'Z']
+    // TODO : FETCH API TO GET LETTERS IN API OR STORE
+    const keyboardManager = useKeyboardManager();
 
-    onMounted(() => {
-        const letters = ['I', 'J', 'L', 'O', 'S', 'T', 'Z']
-        tetrimino.init();
-        const {startGame, restartGame} = useLoopGame(tetrimino, letters, 1000);
-        useKeyboardManager(tetrimino, restartGame);
-        startGame();
-    })
+    const init = () => {
+        boardStore.initBoard();
+        keyboardManager.init();
+        tetriminoStore.init('O');
+        gameState.resetGameOver()
+        start();
+    }
+    const start = () => {
+        gameState.updateIntervalId(setInterval(() => update(), 1000));
+    }
+
+    const update = () => {
+        if (!tetriminoStore.tryMoveDown()) {
+            boardStore.updateBoardFromTetrimino();
+            shuffle(letters)
+            if (!tetriminoStore.tryToSpawn(letters[0])) {
+                stop();
+                console.log("GAME OVER");
+                gameState.setGameOver()
+            } else {
+                tetriminoStore.restart(letters[0])
+            }
+        } else {
+            tetriminoStore.moveDown();
+        }
+    }
+
+    const restart = () => {
+        stop();
+        start();
+    }
+
+    const stop = () => {
+        if (gameState.intervalId) {
+            clearInterval(gameState.intervalId);
+            gameState.updateIntervalId(null);
+        }
+    }
+
     return {
-        tetrimino
-    };
-}
-
-const useKeyboardManager = (tetrimino, restartGame) => {
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowUp') {
-            tetrimino.rotate();
-        } else if (e.key === 'ArrowDown') {
-            tetrimino.moveDown();
-            restartGame();
-        } else if (e.key === 'ArrowLeft') {
-            tetrimino.moveLeft();
-        } else if (e.key === 'ArrowRight') {
-            tetrimino.moveRight();
-        } else if (e.key === 'Space') {
-            console.log("SPACE");
-        }
-    });
-}
-
-const useLoopGame = (tetrimino, letters, timeEachFrame) => {
-    let intervalId = null;
-
-    const startGame = () => {
-        if (intervalId) {
-            clearInterval(intervalId)
-        }
-        intervalId = setInterval(() => Update(tetrimino, letters), timeEachFrame);
+        init,
+        start,
+        restart,
+        stop,
+        update
     }
-    const stopGame = () => {
-        if (intervalId) {
-            clearInterval(intervalId)
-        }
-    }
-    const restartGame = () => {
-        stopGame()
-        startGame()
-    }
-    const pauseGame = () => {
-        stopGame()
-    }
-    return {
-        startGame,
-        stopGame,
-        pauseGame,
-        restartGame
-    }
-}
-
-const Update = (tetrimino, letters) => {
-    if (tetrimino.maxRow() === 20) { // or touch the bottom
-        shuffle(letters)
-        tetrimino.reset(letters[0]) // no reset, stop position and add new tetrimino
-    } else {
-        tetrimino.moveDown()
-    }
-}
-
-// utility tmp
-function shuffle(array) {
-    let currentIndex = array.length;
-
-    // While there remain elements to shuffle...
-    while (currentIndex != 0) {
-
-        // Pick a remaining element...
-        let randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex--;
-
-        // And swap it with the current element.
-        [array[currentIndex], array[randomIndex]] = [
-            array[randomIndex], array[currentIndex]];
-    }
-}
+};

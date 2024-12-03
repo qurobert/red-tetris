@@ -1,28 +1,34 @@
-export const useInfoTetrimino = (colPosition, rowPosition, name) => {
-    const positions = {
-        'I': infoTetriminoI,
-        'J': infoTetriminoJ,
-        'L': infoTetriminoL,
-        'O': infoTetriminoO,
-        'S': infoTetriminoS,
-        'T': infoTetriminoT,
-        'Z': infoTetriminoZ,
+export const useInfoTetrimino = () => {
+    const getPosition = (name, colPosition, rowPosition) => {
+        const infos = getPositionInfos(name);
+
+        return formatRotatePosition(infos, colPosition, rowPosition);
     }
-    const positionInfo = positions[name]
-    if (!positionInfo) {
-        throw new Error('Invalid name')
+
+    const getColor = (name) => {
+        const infos = getPositionInfos(name);
+        return infos.color;
     }
-    const infos = positionInfo()
+
+    const getPositionInfos = (name) => {
+        const positions = {
+            'I': infoTetriminoI,
+            'J': infoTetriminoJ,
+            'L': infoTetriminoL,
+            'O': infoTetriminoO,
+            'S': infoTetriminoS,
+            'T': infoTetriminoT,
+            'Z': infoTetriminoZ,
+        }
+        const positionInfo = positions[name]
+
+        if (!positionInfo) throw new Error('Invalid name')
+        return positionInfo();
+    }
+
     return {
-        rotatePosition: Object.fromEntries(
-            Object.entries(infos).filter(([key]) => key.startsWith('rotate'))
-                .map(([key, value]) => [key, value.map(([x, y]) => ({
-                    col: x + colPosition,
-                    row: y + rowPosition
-                }))])
-        ),
-        color: infos.color,
-        size: infos.size
+        getPosition,
+        getColor,
     }
 }
 
@@ -92,4 +98,14 @@ const infoTetriminoZ = () => {
         rotate270: [[1, 0], [1, 1], [0, 1], [0, 2]],
         color: 'bg-red',
     }
+}
+
+const formatRotatePosition = (infos, colPosition, rowPosition) => {
+    return Object.fromEntries(
+        Object.entries(infos).filter(([key]) => key.startsWith('rotate'))
+            .map(([key, value]) => [key, value.map(([x, y]) => ({
+                col: x + colPosition,
+                row: y + rowPosition
+            }))])
+    )
 }
