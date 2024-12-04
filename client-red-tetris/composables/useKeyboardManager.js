@@ -1,26 +1,26 @@
-import {useTetriminoStore} from "~/stores/tetrimino.js";
+import {useTetrominoStore} from "~/stores/tetromino.js";
 import {useGameManager} from "~/composables/useGameManager.js";
 
 export const useKeyboardManager = () => {
     const init = () => {
         const gameManager = useGameManager();
-        const tetriminoStore = useTetriminoStore();
+        const tetrominoStore = useTetrominoStore();
         const boardStore = useBoardStore();
 
         window.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowUp') {
-                tetriminoStore.rotate();
+                tetrominoStore.rotate();
             } else if (e.key === 'ArrowDown') {
-                tetriminoStore.moveDown();
-                if (tetriminoStore.maxRow() < boardStore.maxIsFilled())
+                tetrominoStore.moveDown();
+                if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
                     gameManager.restart();
             } else if (e.key === 'ArrowLeft') {
-                tetriminoStore.moveLeft();
+                tetrominoStore.moveLeft();
             } else if (e.key === 'ArrowRight') {
-                tetriminoStore.moveRight();
+                tetrominoStore.moveRight();
             } else if (e.key === " ") {
-                tetriminoStore.moveBottom();
-                if (tetriminoStore.maxRow() < boardStore.maxIsFilled())
+                tetrominoStore.moveBottom();
+                if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
                     gameManager.restart();
             }
         });

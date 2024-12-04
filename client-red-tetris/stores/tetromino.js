@@ -1,7 +1,7 @@
-import {useInfoTetrimino} from "~/composables/useInfoTetrimino.js";
+import {useInfoTetromino} from "~/composables/useInfoTetromino.js.js";
 import {useBoardStore} from "~/stores/board.js";
 
-export const useTetriminoStore = defineStore('tetriminoStore', () => {
+export const useTetrominoStore = defineStore('tetrominoStore', () => {
     const refName = ref('');
     const colPosition = ref(4);
     const rowPosition = ref(1);
@@ -11,9 +11,9 @@ export const useTetriminoStore = defineStore('tetriminoStore', () => {
 
 
     const init = (name) => {
-        const infoTetrimino = useInfoTetrimino();
-        const position = infoTetrimino.getPosition(name, colPosition.value, rowPosition.value);
-        const color = infoTetrimino.getColor(name);
+        const infoTetromino = useInfoTetromino();
+        const position = infoTetromino.getPosition(name, colPosition.value, rowPosition.value);
+        const color = infoTetromino.getColor(name);
 
         refName.value = name;
         positions.value = position;
@@ -21,8 +21,8 @@ export const useTetriminoStore = defineStore('tetriminoStore', () => {
     }
 
     const tryToSpawn = (name) => {
-        const infoTetrimino = useInfoTetrimino();
-        const newPositions = infoTetrimino.getPosition(name, 4, 1);
+        const infoTetromino = useInfoTetromino();
+        const newPositions = infoTetromino.getPosition(name, 4, 1);
         if (!verifyNewPosition(newPositions['rotate0'])) return false;
         return true;
     }
@@ -84,18 +84,18 @@ export const useTetriminoStore = defineStore('tetriminoStore', () => {
 
     // ACTIONS
     const tryMoveDown = () => {
-        const infoTetrimino = useInfoTetrimino();
+        const infoTetromino = useInfoTetromino();
         const newRowPosition = rowPosition.value + 1;
-        const newPositions = infoTetrimino.getPosition(refName.value, colPosition.value, newRowPosition);
+        const newPositions = infoTetromino.getPosition(refName.value, colPosition.value, newRowPosition);
 
         if (!verifyNewPosition(newPositions[modePosition.value])) return false;
         return true
     }
 
     const moveDown = () => {
-        const infoTetrimino = useInfoTetrimino();
+        const infoTetromino = useInfoTetromino();
         const newRowPosition = rowPosition.value + 1;
-        const newPositions = infoTetrimino.getPosition(refName.value, colPosition.value, newRowPosition);
+        const newPositions = infoTetromino.getPosition(refName.value, colPosition.value, newRowPosition);
 
         if (!verifyNewPosition(newPositions[modePosition.value])) return ;
         rowPosition.value += 1;
@@ -110,8 +110,8 @@ export const useTetriminoStore = defineStore('tetriminoStore', () => {
     const moveLeft = () => {
         if (minCol() === 1) return;
         const newColPosition = colPosition.value - 1;
-        const infoTetrimino = useInfoTetrimino();
-        const newPositions = infoTetrimino.getPosition(refName.value, newColPosition, rowPosition.value);
+        const infoTetromino = useInfoTetromino();
+        const newPositions = infoTetromino.getPosition(refName.value, newColPosition, rowPosition.value);
 
         if (!verifyNewPosition(newPositions[modePosition.value])) return;
         colPosition.value -= 1;
@@ -121,8 +121,8 @@ export const useTetriminoStore = defineStore('tetriminoStore', () => {
     const moveRight = () => {
         if (maxCol() === 10) return;
         const newColPosition = colPosition.value + 1;
-        const infoTetrimino = useInfoTetrimino();
-        const newPositions = infoTetrimino.getPosition(refName.value, newColPosition, rowPosition.value);
+        const infoTetromino = useInfoTetromino();
+        const newPositions = infoTetromino.getPosition(refName.value, newColPosition, rowPosition.value);
 
         if (!verifyNewPosition(newPositions[modePosition.value])) return;
         colPosition.value += 1;

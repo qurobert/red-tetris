@@ -26,7 +26,7 @@ onMounted(() => {
     </div>
 
     <!--    Tetris Board Game    -->
-    <Tetrimino />
+    <Tetromino />
 
     <BlockBoard />
   </div>

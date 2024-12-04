@@ -1,8 +1,8 @@
-import {useTetriminoStore} from "~/stores/tetrimino.js";
+import {usetetrominoStore} from "~/stores/tetromino.js";
 
 export const useBoardStore = defineStore('boardStore', () => {
     const board = ref([]);
-    const tetriminoStore = useTetriminoStore();
+    const tetrominoStore = useTetrominoStore();
 
     const initBoard = () => {
         for (let i = 1; i <= 20; i++) {
@@ -16,9 +16,10 @@ export const useBoardStore = defineStore('boardStore', () => {
             }
         }
     }
-    const updateBoardFromTetrimino = () => {
-        const finalPosition = tetriminoStore.getPosition();
-        const color = tetriminoStore.refColor;
+
+    const updateBoardFromTetromino = () => {
+        const finalPosition = tetrominoStore.getPosition();
+        const color = tetrominoStore.refColor;
 
         finalPosition.map((block) => {
             const index = block.row * 10 - (10 - block.col) - 1;
@@ -28,9 +29,40 @@ export const useBoardStore = defineStore('boardStore', () => {
         });
     }
 
+    const tryToRemoveLines =  () => {
+        const rowsGroup = Object.groupBy(board.value.filter((block) => block.isFilled), (block) => block.row);
+
+        Object.keys(rowsGroup).forEach((row) => {
+            if (rowsGroup[row].length === 10) {
+                board.value.forEach((block) => {
+                    if (block.row === parseInt(row)) {
+                        block.isFilled = false;
+                        block.color = null;
+                        block.row = 0;
+                    }
+                });
+
+                board.value.forEach((block) => {
+                    if (block.row < parseInt(row)) {
+                        block.row += 1;
+                    }
+                });
+
+                const newBoard = [];
+                for (let i = 1; i <= 20; i++) {
+                    for (let j = 1; j <= 10; j++) {
+                        const block = board.value.find((block) => block.row === i && block.col === j);
+                        newBoard.push(block);
+                    }
+                }
+                board.value = newBoard;
+            }
+        });
+    }
+
     const maxIsFilled = () => {
-        const minCol = tetriminoStore.minCol();
-        const maxCol = tetriminoStore.maxCol();
+        const minCol = tetrominoStore.minCol();
+        const maxCol = tetrominoStore.maxCol();
 
         const colsGroup = Object.groupBy(board.value
             .filter((block) => !block.isFilled && block.col >= minCol && block.col <= maxCol), (block) => block.col);
@@ -40,7 +72,8 @@ export const useBoardStore = defineStore('boardStore', () => {
     return {
         board,
         initBoard,
-        updateBoardFromTetrimino,
+        tryToRemoveLines,
+        updateBoardFromTetromino,
         maxIsFilled
     }
 });
