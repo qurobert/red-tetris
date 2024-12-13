@@ -1,7 +1,7 @@
-<script setup>
-import {useGameManager} from "~/composables/useGameManager.js";
+<script setup lang="ts">
+import {useGameManager} from "~/composables/useGameManager";
 import GameOverText from "~/components/GameOverText.vue";
-import {useGameStateStore} from "~/stores/gameState.js";
+import {useGameStateStore} from "~/stores/gameState";
 
 const gameManager = useGameManager();
 const gameStateStore = useGameStateStore();

@@ -1,26 +1,34 @@
-import {useTetrominoStore} from "~/stores/tetromino.js";
-import {useBoardStore} from "~/stores/board.js";
-import {useKeyboardManager} from "~/composables/useKeyboardManager.js";
-import {setInterval} from "#app/compat/interval.js";
-import {useGameStateStore} from "~/stores/gameState.js";
+import {useTetrominoStore} from "~/stores/tetromino";
+import {useBoardStore} from "~/stores/board";
+import {useKeyboardManager} from "~/composables/useKeyboardManager";
+import {useGameStateStore} from "~/stores/gameState";
+import {NameTetromino} from "~/composables/useInfoTetromino";
 
 export const useGameManager = () => {
     const tetrominoStore = useTetrominoStore();
     const boardStore = useBoardStore();
     const gameState = useGameStateStore();
-    const letters = ['I', 'J', 'L', 'O', 'S', 'T', 'Z']
+    const letters : NameTetromino[] = [
+      NameTetromino.I,
+      NameTetromino.J,
+      NameTetromino.L,
+      NameTetromino.O,
+      NameTetromino.S,
+      NameTetromino.T,
+      NameTetromino.Z
+    ]
     // TODO : FETCH API TO GET LETTERS IN API OR STORE
     const keyboardManager = useKeyboardManager();
 
     const init = () => {
         boardStore.initBoard();
         keyboardManager.init();
-        tetrominoStore.init('T');
+        tetrominoStore.init(NameTetromino.T);
         gameState.resetGameOver()
         start();
     }
     const start = () => {
-        gameState.updateIntervalId(setInterval(() => update(), 1000));
+        gameState.updateIntervalId(setInterval(() => update(), 1000) as any);
     }
 
     const update = () => {

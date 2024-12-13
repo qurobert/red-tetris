@@ -1,5 +1,5 @@
-<script setup>
-import {useTetrominoStore} from "~/stores/tetromino.js";
+<script setup lang="ts">
+import {useTetrominoStore} from "~/stores/tetromino";
 
 const tetrominoStore = useTetrominoStore();
 </script>

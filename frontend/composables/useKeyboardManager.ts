@@ -1,5 +1,5 @@
-import {useTetrominoStore} from "~/stores/tetromino.js";
-import {useGameManager} from "~/composables/useGameManager.js";
+import {useTetrominoStore} from "~/stores/tetromino";
+import {useGameManager} from "~/composables/useGameManager";
 
 export const useKeyboardManager = () => {
     const init = () => {
@@ -27,7 +27,7 @@ export const useKeyboardManager = () => {
     }
 
     const remove = () => {
-        window.removeEventListener('keydown');
+        window.removeEventListener('keydown', () => {});
     }
 
     return {

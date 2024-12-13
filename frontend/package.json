@@ -15,6 +15,7 @@
     "@nuxtjs/tailwindcss": "^6.12.2",
     "@pinia/nuxt": "^0.8.0",
     "@tanstack/vue-table": "^8.20.5",
+    "@vee-validate/zod": "^4.14.7",
     "@vesp/nuxt-fontawesome": "^1.1.0",
     "@vueuse/core": "^12.0.0",
     "class-variance-authority": "^0.7.1",
@@ -25,8 +26,11 @@
     "radix-vue": "^1.9.11",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "vee-validate": "^4.14.7",
     "vue": "latest",
-    "vue-router": "latest"
+    "vue-router": "latest",
+    "yup": "^1.5.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.7.1",

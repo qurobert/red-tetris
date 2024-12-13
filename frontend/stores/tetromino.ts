@@ -1,16 +1,27 @@
-import {useInfoTetromino} from "~/composables/useInfoTetromino.js";
-import {useBoardStore} from "~/stores/board.js";
+import {
+    type InfoPositionTetromino,
+    NameTetromino, type Position,
+    useInfoTetromino
+} from "~/composables/useInfoTetromino.js";
+import {useBoardStore} from "~/stores/board";
+
+export enum ModePosition {
+    rotate0 = 'rotate0',
+    rotate90 = 'rotate90',
+    rotate180 = 'rotate180',
+    rotate270 = 'rotate270',
+}
 
 export const useTetrominoStore = defineStore('tetrominoStore', () => {
-    const refName = ref('');
+    const refName = ref(null as NameTetromino | null );
     const colPosition = ref(4);
     const rowPosition = ref(1);
-    const positions = ref({});
+    const positions = ref({} as InfoPositionTetromino);
     const refColor = ref('');
-    const modePosition = ref('rotate0');
+    const modePosition  = ref(ModePosition.rotate0);
 
 
-    const init = (name) => {
+    const init = (name: NameTetromino) => {
         const infoTetromino = useInfoTetromino();
         const position = infoTetromino.getPosition(name, colPosition.value, rowPosition.value);
         const color = infoTetromino.getColor(name);
@@ -20,17 +31,17 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         refColor.value = color;
     }
 
-    const tryToSpawn = (name) => {
+    const tryToSpawn = (name: NameTetromino) => {
         const infoTetromino = useInfoTetromino();
         const newPositions = infoTetromino.getPosition(name, 4, 1);
         if (!verifyNewPosition(newPositions['rotate0'])) return false;
         return true;
     }
 
-    const restart = (newName) => {
+    const restart = (newName: NameTetromino) => {
         colPosition.value = 4;
         rowPosition.value = 1;
-        modePosition.value = 'rotate0';
+        modePosition.value = ModePosition.rotate0;
         init(newName);
     }
 
@@ -56,7 +67,7 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         return Math.max(...positions.value?.[modePosition.value]?.map(item => item.row));
     }
 
-    const verifyNewPosition = (newPosition) => {
+    const verifyNewPosition = (newPosition : Position[]) => {
         const boardStore = useBoardStore();
         const board = boardStore.board;
 
@@ -77,7 +88,7 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         return positions.value[modePosition.value];
     }
 
-    const setPosition = (newPosition) => {
+    const setPosition = (newPosition: InfoPositionTetromino) => {
         positions.value = newPosition;
     }
 
@@ -137,18 +148,18 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         modePosition.value = newModeRotate;
     }
 
-    const getNewRotation = () => {
+    const getNewRotation = () : ModePosition => {
         switch (modePosition.value) {
-            case 'rotate0':
-                return 'rotate90';
-            case 'rotate90':
-                return 'rotate180';
-            case 'rotate180':
-                return 'rotate270';
-            case 'rotate270':
-                return 'rotate0';
+            case ModePosition.rotate0:
+                return ModePosition.rotate90;
+            case ModePosition.rotate90:
+                return ModePosition.rotate180;
+            case ModePosition.rotate180:
+                return ModePosition.rotate270;
+            case ModePosition.rotate270:
+                return ModePosition.rotate0;
             default:
-                return 'rotate0';
+                return ModePosition.rotate0;
         }
     }
 

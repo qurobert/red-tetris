@@ -1,5 +1,5 @@
-<script setup>
-import {useBoardStore} from "~/stores/board";
+<script setup lang="ts">
+import {useBoardStore} from "~/stores/board.js";
 
 const boardStore = useBoardStore();
 const filledBoard = computed(() => boardStore.board.filter(block => block.isFilled));

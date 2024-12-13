@@ -1,11 +1,11 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs) {
+export function cn(...inputs: any) {
     return twMerge(clsx(inputs));
 }
 
-export const shuffle = (array) => {
+export const shuffle = (array: any[]) => {
     let currentIndex = array.length;
 
     // While there remain elements to shuffle...
@@ -22,6 +22,6 @@ export const shuffle = (array) => {
 }
 
 
-export const capitalizeFirstLetter = (string) => {
+export const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }

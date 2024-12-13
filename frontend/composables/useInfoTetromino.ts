@@ -1,16 +1,29 @@
+import {ModePosition} from "~/stores/tetromino";
+
+export enum NameTetromino {
+    I = 'I',
+    J = 'J',
+    L = 'L',
+    O = 'O',
+    S = 'S',
+    T = 'T',
+    Z = 'Z',
+}
+
 export const useInfoTetromino = () => {
-    const getPosition = (name, colPosition, rowPosition) => {
+    const getPosition = (name: NameTetromino | null, colPosition: number, rowPosition: number) : InfoPositionTetromino => {
+        if (!name) throw new Error('Invalid name');
         const infos = getPositionInfos(name);
 
         return formatRotatePosition(infos, colPosition, rowPosition);
     }
 
-    const getColor = (name) => {
+    const getColor = (name: NameTetromino) => {
         const infos = getPositionInfos(name);
         return infos.color;
     }
 
-    const getPositionInfos = (name) => {
+    const getPositionInfos = (name: NameTetromino) : InfoTetromino => {
         const positions = {
             'I': infoTetrominoI,
             'J': infoTetrominoJ,
@@ -32,7 +45,15 @@ export const useInfoTetromino = () => {
     }
 }
 
-const infoTetrominoI = () => {
+interface InfoTetromino {
+    [ModePosition.rotate0]: number[][];
+    [ModePosition.rotate90]: number[][];
+    [ModePosition.rotate180]: number[][];
+    [ModePosition.rotate270]: number[][];
+    color: string;
+}
+
+const infoTetrominoI = () : InfoTetromino => {
     return {
         rotate0: [[0, 1], [1, 1], [2, 1], [3, 1]],
         rotate90: [[2, 0], [2, 1], [2, 2], [2, 3]],
@@ -42,7 +63,7 @@ const infoTetrominoI = () => {
     }
 }
 
-const infoTetrominoJ = () => {
+const infoTetrominoJ = () : InfoTetromino => {
     return {
         rotate0: [[0, 0], [0, 1], [1, 1], [2, 1]],
         rotate90: [[1, 2], [2, 0], [1, 0], [1, 1]],
@@ -51,7 +72,7 @@ const infoTetrominoJ = () => {
         color: 'bg-blue',
     }
 }
-const infoTetrominoL = () => {
+const infoTetrominoL = () : InfoTetromino => {
     return {
         rotate0: [[0, 1], [1, 1], [2, 1], [2, 0]],
         rotate90: [[1, 0], [1, 1], [1, 2], [2, 2]],
@@ -60,7 +81,7 @@ const infoTetrominoL = () => {
         color: 'bg-orange',
     }
 }
-const infoTetrominoO = () => {
+const infoTetrominoO = () : InfoTetromino => {
     return {
         rotate0: [[1, 0], [1, 1], [2, 0], [2, 1]],
         rotate90: [[1, 0], [1, 1], [2, 0], [2, 1]],
@@ -70,7 +91,7 @@ const infoTetrominoO = () => {
     }
 }
 
-const infoTetrominoS = () => {
+const infoTetrominoS = () : InfoTetromino => {
     return {
         rotate0: [[0, 1], [1, 1], [1, 0], [2, 0]],
         rotate90: [[1, 0], [1, 1], [2, 1], [2, 2]],
@@ -80,7 +101,7 @@ const infoTetrominoS = () => {
     }
 }
 
-const infoTetrominoT = () => {
+const infoTetrominoT = () : InfoTetromino => {
     return {
         rotate0: [[0, 1], [1, 1], [1, 0], [2, 1]],
         rotate90: [[1, 0], [1, 1], [1, 2], [2, 1]],
@@ -90,7 +111,7 @@ const infoTetrominoT = () => {
     }
 }
 
-const infoTetrominoZ = () => {
+const infoTetrominoZ = () :  InfoTetromino => {
     return {
         rotate0: [[0, 0], [1, 0], [1, 1], [2, 1]],
         rotate90: [[2, 0], [2, 1], [1, 1], [1, 2]],
@@ -100,12 +121,26 @@ const infoTetrominoZ = () => {
     }
 }
 
-const formatRotatePosition = (infos, colPosition, rowPosition) => {
-    return Object.fromEntries(
-        Object.entries(infos).filter(([key]) => key.startsWith('rotate'))
-            .map(([key, value]) => [key, value.map(([x, y]) => ({
-                col: x + colPosition,
-                row: y + rowPosition
-            }))])
+
+export interface InfoPositionTetromino {
+    [ModePosition.rotate0]: Position[];
+    [ModePosition.rotate90]: Position[];
+    [ModePosition.rotate180]: Position[];
+    [ModePosition.rotate270]: Position[];
+}
+
+
+export interface Position {
+    col: number;
+    row: number;
+}
+const formatRotatePosition = (infos : any, colPosition: number, rowPosition : number) : InfoPositionTetromino => {
+    return <InfoPositionTetromino>Object.fromEntries(
+      Object.entries(infos).filter(([key]) => key.startsWith('rotate'))
+      // @ts-ignore
+      .map(([key, value]) => [key, value.map(([x, y]) => ({
+          col: x + colPosition,
+          row: y + rowPosition
+      }))])
     )
 }
