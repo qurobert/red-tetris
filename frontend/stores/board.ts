@@ -1,5 +1,6 @@
 import {useTetrominoStore} from "~/stores/tetromino.js";
 import type {Position} from "~/composables/useInfoTetromino";
+
 export const useBoardStore = defineStore('boardStore', () => {
     const board = ref([] as Board[]);
     const tetrominoStore = useTetrominoStore();
@@ -71,11 +72,16 @@ export const useBoardStore = defineStore('boardStore', () => {
         return Math.min(...Object.values(colsGroup).map((group) => group?.length ?? -1) );
     }
 
+    const reset = () => {
+        board.value = [];
+    }
+
     return {
         board,
         initBoard,
         tryToRemoveLines,
         updateBoardFromTetromino,
-        maxIsFilled
+        maxIsFilled,
+        reset,
     }
 });

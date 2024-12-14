@@ -5,7 +5,9 @@ import * as yup from "yup";
 import {useForm} from "vee-validate";
 import {FormControl, FormField, FormItem, FormMessage} from "~/components/ui/form";
 import {Input} from "~/components/ui/input";
+import {useUserStore} from "~/stores/user";
 
+const userStore = useUserStore();
 const props = defineProps<{
   modeRoom: ModeRoom,
   idRoom?: number
@@ -15,22 +17,33 @@ const props = defineProps<{
 const formSchema = yup.object({
   name: yup.string().required("Your name are required"),
 })
+console.log(userStore.player_name);
 const form = useForm({
   validationSchema: formSchema,
+  initialValues: {
+    name: userStore.player_name,
+  }
 })
 
 // SUBMIT
 const onSubmit = form.handleSubmit(({name}) => {
   const router = useRouter();
+  let id = 0;
+
+  // set ID FROM MODE ROOM
+  userStore.updatePlayerName(name);
   if (props.modeRoom === ModeRoom.create) {
     console.log("Create room");
-    router.push({ path: '123456789' });  // TODO: USE ID RETURN BY BACKEND
+    id = Math.floor(Math.random() * 1000000000); // TODO: USE ID RETURN BY BACKEND
   } else {
     console.log("Join room : " + props.idRoom);
     if (!props.idRoom)
       return ;
-    router.push({ path: String(props.idRoom) });
+    id = props.idRoom;
   }
+
+
+  router.push({ path: String(id) });  // TODO: USE ID RETURN BY BACKEND
 })
 </script>
 

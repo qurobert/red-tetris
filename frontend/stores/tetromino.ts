@@ -44,6 +44,14 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         modePosition.value = ModePosition.rotate0;
         init(newName);
     }
+    const reset = () => {
+        refName.value = null;
+        colPosition.value = 4;
+        rowPosition.value = 1;
+        positions.value = {} as InfoPositionTetromino;
+        refColor.value = '';
+        modePosition.value = ModePosition.rotate0;
+    }
 
 
     // UTILITY
@@ -178,6 +186,7 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         moveBottom,
         init,
         restart,
+        reset,
 
         minRow,
         maxRow,

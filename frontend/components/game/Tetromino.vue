@@ -9,6 +9,6 @@ const tetrominoStore = useTetrominoStore();
 </template>
 
 <style>
-@import url("@/assets/css/position_board_tetris.css");
-@import url("@/assets/css/color_board_tetris.css");
+@import url("assets/css/position_board_tetris.css");
+@import url("assets/css/color_board_tetris.css");
 </style>

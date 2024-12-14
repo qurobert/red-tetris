@@ -52,6 +52,14 @@ export const useGameManager = () => {
         start();
     }
 
+    const reset = () => {
+        stop();
+        boardStore.reset();
+        tetrominoStore.reset();
+        gameState.resetGameOver();
+        keyboardManager.reset();
+    }
+
     const stop = () => {
         if (gameState.intervalId) {
             clearInterval(gameState.intervalId);
@@ -62,6 +70,7 @@ export const useGameManager = () => {
     return {
         init,
         start,
+        reset,
         restart,
         stop,
         update

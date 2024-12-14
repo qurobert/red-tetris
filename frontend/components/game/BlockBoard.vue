@@ -10,6 +10,6 @@ const filledBoard = computed(() => boardStore.board.filter(block => block.isFill
 </template>
 
 <style>
-@import url("@/assets/css/position_board_tetris.css");
-@import url("@/assets/css/color_board_tetris.css");
+@import url("assets/css/position_board_tetris.css");
+@import url("assets/css/color_board_tetris.css");
 </style>

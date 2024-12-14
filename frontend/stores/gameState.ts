@@ -1,11 +1,7 @@
 export const useGameStateStore = defineStore('gameStateStore', () => {
-    const score = ref(0);
     const intervalId = ref(null as string | null);
     const gameOver = ref(false);
 
-    const updateScore = (value: number) => {
-        score.value += value;
-    }
     const updateIntervalId = (newIntervalId: string | null)=> {
         intervalId.value = newIntervalId;
     }
@@ -21,9 +17,7 @@ export const useGameStateStore = defineStore('gameStateStore', () => {
         gameOver,
         setGameOver,
         resetGameOver,
-        score,
         intervalId,
-        updateScore,
         updateIntervalId
     }
 })
