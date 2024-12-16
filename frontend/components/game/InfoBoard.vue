@@ -16,7 +16,7 @@ const color = infoTetromino.getColor(nameTetromino);
       <h2 class="text-lg mb-2 text-center font-bold">
         Next
       </h2>
-      <div class="grid grid-cols-4 grid-rows-4 w-20 h-20 bg-black">
+      <div class="grid grid-cols-4 grid-rows-4 w-20 h-20">
         <Blocks :positions="positionsTetromino" :color="color" />
       </div>
     </div>
