@@ -1,3 +1,5 @@
+<script>
+</script>
 <template>
   <div class="w-full flex justify-center border-b mb-2">
     <NuxtLink to="/">

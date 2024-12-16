@@ -9,18 +9,23 @@ export const useKeyboardManager = () => {
 
         if (e.key === 'ArrowUp') {
             tetrominoStore.rotate();
+            e.preventDefault()
         } else if (e.key === 'ArrowDown') {
             tetrominoStore.moveDown();
             if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
                 gameManager.restart();
+            e.preventDefault()
         } else if (e.key === 'ArrowLeft') {
             tetrominoStore.moveLeft();
+            e.preventDefault()
         } else if (e.key === 'ArrowRight') {
             tetrominoStore.moveRight();
+            e.preventDefault()
         } else if (e.key === " ") {
             tetrominoStore.moveBottom();
             if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
                 gameManager.restart();
+            e.preventDefault()
         }
     }
     const init = () => {

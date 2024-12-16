@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {useTetrominoStore} from "~/stores/tetromino";
+import Blocks from "~/components/game/utility/Blocks.vue";
 
 const tetrominoStore = useTetrominoStore();
 </script>
 
 <template>
-  <div v-for="block in tetrominoStore.positions[tetrominoStore.modePosition]" class="block" :class="`col-${block.col} row-${block.row} ${tetrominoStore.refColor}`" v-if="tetrominoStore.positions"></div>
+  <Blocks :color="tetrominoStore.refColor" :positions="tetrominoStore.positions[tetrominoStore.modePosition]" />
 </template>
 
 <style>
