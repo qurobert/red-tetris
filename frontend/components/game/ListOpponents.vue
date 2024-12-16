@@ -35,14 +35,16 @@ for (let i = 20; i > 15; i--) {
 </script>
 
 <template>
-  <h1 class="font-bold text-xl mt-8 mb-2 text-center">Opponents</h1>
-  <div class="m-4 flex flex-wrap gap-4 justify-center">
-    <div v-for="(player, index) in players.sort((a, b) => b.score - a.score)" class="flex-col justify-center">
-      <TetrisBoard size="sm">
-        <Block :col="block.col" :row="block.row" :color="block.color" :is-border="false" v-for="block in player.blocks" />
-      </TetrisBoard>
-      <p class="text-center mt-2">{{player.name}} #{{index + 1}}</p>
-      <p class="text-center">{{player.score}}</p>
+  <div>
+    <h1 class="font-bold text-xl mt-8 mb-2 text-center">Opponents</h1>
+    <div class="m-4 flex flex-wrap gap-4 justify-center">
+      <div v-for="(player, index) in players.sort((a, b) => b.score - a.score)" class="flex-col justify-center">
+        <TetrisBoard size="sm">
+          <Block :col="block.col" :row="block.row" :color="block.color" :is-border="false" v-for="block in player.blocks" />
+        </TetrisBoard>
+        <p class="text-center mt-2">{{player.name}} #{{index + 1}}</p>
+        <p class="text-center">{{player.score}}</p>
+      </div>
     </div>
   </div>
 </template>

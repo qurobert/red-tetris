@@ -1,18 +1,21 @@
 <script setup lang="ts">
-import TetrisBoard from "~/components/game/Tetris.vue";
+import Tetris from "~/components/game/Tetris.vue";
 import InfoBoard from "~/components/game/InfoBoard.vue";
 import ListOpponents from "~/components/game/ListOpponents.vue";
-
-definePageMeta({
-  showHeader: false
-})
+import MessagePenalty from "~/components/game/MessagePenalty.vue";
 
 </script>
 
 <template>
-  <div class="w-full flex justify-center mt-12">
-    <TetrisBoard />
-    <InfoBoard />
+  <div class="md:flex md:justify-evenly md:items-center">
+    <div class="flex justify-center mt-12 md:mt-8">
+      <div>
+        <Tetris />
+        <MessagePenalty />
+      </div>
+      <InfoBoard />
+    </div>
+
+    <ListOpponents />
   </div>
-  <ListOpponents />
 </template>

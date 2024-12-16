@@ -3,4 +3,5 @@ interface Board {
 	row: number;
 	color: string | null;
 	isFilled: boolean;
+	indestructible?: boolean;
 }
