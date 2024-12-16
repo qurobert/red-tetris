@@ -1,6 +1,8 @@
 import {useTetrominoStore} from "~/stores/tetromino.js";
 import type {Position} from "~/composables/useInfoTetromino";
 import {useGameStateStore} from "~/stores/gameState";
+import {useUserStore} from "~/stores/user";
+import {add} from "lodash-es";
 
 export const useBoardStore = defineStore('boardStore', () => {
     const board = ref([] as Board[]);
@@ -31,12 +33,15 @@ export const useBoardStore = defineStore('boardStore', () => {
     }
 
     const tryToRemoveLines =  () => {
+        const userStore = useUserStore();
+        let linesRemoved = 0;
         const rowsGroup = Object.groupBy(board.value
         .filter((block) => block.isFilled && !block.indestructible),
           (block) => block.row);
 
         Object.keys(rowsGroup).forEach((row: any) => {
             if (rowsGroup[row]?.length === 10) {
+                linesRemoved++;
                 board.value.forEach((block) => {
                     if (block.row == row) {
                         block.isFilled = false;
@@ -54,6 +59,15 @@ export const useBoardStore = defineStore('boardStore', () => {
                 recalculateColAndRowValue()
             }
         });
+
+
+        const addScore = Math.round(100 * linesRemoved ** 1.5);
+        userStore.incrementScore(addScore);
+
+        if (linesRemoved > 1) {
+            console.log("REMOVE MORE THAN ONE LINE")
+            // TODO: ADD PENALTY TO USER IF MORE THAN ONE linesRemoved
+        }
     }
 
     const recalculateColAndRowValue = () => {

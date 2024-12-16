@@ -5,8 +5,11 @@ export const useUserStore = defineStore('userStore', () => {
 	const rank = ref(1);
 	const isAdmin = ref(true);
 
-	const updateScore = (value: number) => {
+	const incrementScore = (value: number) => {
 		score.value += value;
+		if (score.value > highScore.value) {
+			updateHighscore(score.value);
+		}
 	};
 
 	const updateHighscore = (value: number) => {
@@ -23,15 +26,13 @@ export const useUserStore = defineStore('userStore', () => {
 		localStorage.setItem('player_name', name);
 	}
 
-	const resetScore = () => {
-		score.value = 0;
-	}
-
-	const init = (player_name: string, score: number) => {
+	const init = (player_name: string, init_score: number) => {
 		updatePlayerName(player_name);
-		updateScore(score);
+		score.value = init_score;
 	}
-
+	const reset = () => {
+		score.value = 0
+	}
 	const setIsAdmin = (value: boolean) => {
 		isAdmin.value = value;
 	}
@@ -45,8 +46,8 @@ export const useUserStore = defineStore('userStore', () => {
 		rank,
 		updateRank,
 		score,
-		updateScore,
-		resetScore,
+		incrementScore,
+		reset,
 		updatePlayerName,
 		init,
 	}

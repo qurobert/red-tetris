@@ -3,6 +3,7 @@
 //   player: "John",
 //   lines: 2
 // }
+
 const penalty = null as {
   player: string,
   lines: number

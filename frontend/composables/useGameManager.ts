@@ -8,6 +8,7 @@ export const useGameManager = () => {
     const tetrominoStore = useTetrominoStore();
     const boardStore = useBoardStore();
     const gameState = useGameStateStore();
+    const userStore = useUserStore();
     const letters : NameTetromino[] = [
       NameTetromino.I,
       NameTetromino.J,
@@ -58,6 +59,7 @@ export const useGameManager = () => {
         tetrominoStore.reset();
         gameState.resetGameOver();
         keyboardManager.reset();
+        userStore.reset();
     }
 
     const stop = () => {

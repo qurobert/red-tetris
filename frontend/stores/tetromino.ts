@@ -122,8 +122,14 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
     }
 
     const moveBottom = () => {
-        while (tryMoveDown())
+        const userStore = useUserStore();
+        let addScore = 0;
+
+        while (tryMoveDown()) {
             moveDown();
+            addScore++;
+        }
+        userStore.incrementScore(addScore)
     }
 
     const moveLeft = () => {
