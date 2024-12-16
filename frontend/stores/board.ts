@@ -7,7 +7,7 @@ import {add} from "lodash-es";
 export const useBoardStore = defineStore('boardStore', () => {
     const board = ref([] as Board[]);
     const tetrominoStore = useTetrominoStore();
-
+    const refBoard = ref(null as Element | null);
     const initBoard = () => {
         for (let i = 1; i <= 20; i++) {
             for (let j = 1; j <= 10; j++) {
@@ -19,6 +19,9 @@ export const useBoardStore = defineStore('boardStore', () => {
                 });
             }
         }
+    }
+    const setRefBoard = (newRefBoard: any) => {
+        refBoard.value = newRefBoard;
     }
     const updateBoardFromTetromino = () => {
         const finalPosition = tetrominoStore.getPosition();
@@ -161,6 +164,8 @@ export const useBoardStore = defineStore('boardStore', () => {
         updateBoardFromTetromino,
         maxIsFilled,
         reset,
+        refBoard,
+        setRefBoard,
         addPenalityLine: addPenaltyLines,
     }
 });

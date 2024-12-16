@@ -1,9 +1,21 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
+import {useBoardStore} from "~/stores/board";
+
+const props = withDefaults(defineProps<{
   size?: 'sm' | 'default';
+  principal?: boolean
 }>(), {
   size: 'default',
+  principal: false
 })
+
+const boardStore = useBoardStore();
+const setDivRef = (divRef: any) => {
+  // Si ce composant est le principal, on l'enregistre dans le store
+  if (props.principal) {
+    boardStore.setRefBoard(divRef)
+  }
+};
 </script>
 
 <template>
@@ -12,6 +24,7 @@ withDefaults(defineProps<{
           'w-[7.5rem] h-[15rem]': size === 'sm',
           'w-60 h-[30rem]': size === 'default',
        }"
+       :ref="setDivRef"
   >
     <!--    Header Tetris Board Game    -->
     <div v-for="index in 4" class="bg-[#666]" :class="{

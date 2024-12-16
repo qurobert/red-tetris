@@ -8,7 +8,6 @@ import TetrisBoard from "~/components/game/utility/TetrisBoard.vue";
 
 const gameManager = useGameManager();
 const gameStateStore = useGameStateStore();
-
 function beforeUnload(e: Event) {
   e.preventDefault();
 }
@@ -37,7 +36,7 @@ onBeforeRouteLeave((to, from, next) => {
 </script>
 
 <template>
-  <TetrisBoard>
+  <TetrisBoard principal>
     <Tetromino />
     <BlockBoard />
     <GameOverText v-if="gameStateStore.gameOver"/>
