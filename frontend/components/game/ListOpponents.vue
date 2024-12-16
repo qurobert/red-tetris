@@ -35,7 +35,7 @@ for (let i = 20; i > 15; i--) {
 </script>
 
 <template>
-  <h1 class="font-bold text-xl m-4">Opponents</h1>
+  <h1 class="font-bold text-xl mt-8 mb-2 text-center">Opponents</h1>
   <div class="m-4 flex flex-wrap gap-4 justify-center">
     <div v-for="(player, index) in players.sort((a, b) => b.score - a.score)" class="flex-col justify-center">
       <TetrisBoard size="sm">
