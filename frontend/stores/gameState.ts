@@ -1,3 +1,6 @@
+import {defineStore} from "pinia";
+import {ref} from "vue";
+
 export const useGameStateStore = defineStore('gameStateStore', () => {
     const intervalId = ref(null as string | null);
     const gameOver = ref(false);

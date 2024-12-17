@@ -2,6 +2,7 @@
 import {NameTetromino, useInfoTetromino} from "~/composables/useInfoTetromino";
 import {ModePosition} from "~/stores/tetromino";
 import Blocks from "~/components/game/utility/Blocks.vue";
+import {useUserStore} from "~/stores/user";
 
 const userStore = useUserStore();
 const infoTetromino = useInfoTetromino();
@@ -11,7 +12,7 @@ const color = infoTetromino.getColor(nameTetromino);
 </script>
 
 <template>
-  <div class="ml-8 h-[30rem] flex flex-col items-center justify-evenly">
+  <div class="ml-4 md:ml-8 h-[30rem] flex flex-col items-center justify-evenly">
     <div class="text-center">
       <h2 class="text-lg mb-2 text-center font-bold">
         Next

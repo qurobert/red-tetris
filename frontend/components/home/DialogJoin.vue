@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import {ModeRoom} from "~/types/modeRoom";
 import FormDialogCreateOrJoin from "~/components/home/FormDialogCreateOrJoin.vue";
+import {ref} from "vue";
 
 const isOpen = ref(false);
 const idRoom = ref(0);

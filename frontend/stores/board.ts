@@ -2,12 +2,14 @@ import {useTetrominoStore} from "~/stores/tetromino.js";
 import type {Position} from "~/composables/useInfoTetromino";
 import {useGameStateStore} from "~/stores/gameState";
 import {useUserStore} from "~/stores/user";
-import {add} from "lodash-es";
+import {defineStore} from "pinia";
+import {ref} from "vue";
 
 export const useBoardStore = defineStore('boardStore', () => {
     const board = ref([] as Board[]);
     const tetrominoStore = useTetrominoStore();
     const refBoard = ref(null as Element | null);
+
     const initBoard = () => {
         for (let i = 1; i <= 20; i++) {
             for (let j = 1; j <= 10; j++) {
@@ -20,10 +22,18 @@ export const useBoardStore = defineStore('boardStore', () => {
             }
         }
     }
+
     const setRefBoard = (newRefBoard: any) => {
         refBoard.value = newRefBoard;
     }
+
     const updateBoardFromTetromino = () => {
+        if (!tetrominoStore.refName || !tetrominoStore.refColor) {
+            throw new Error("You must init tetromino before updating board");
+        }
+        if (!board.value.length) {
+            throw new Error("You must init board before updating board");
+        }
         const finalPosition = tetrominoStore.getPosition();
         const color = tetrominoStore.refColor;
 
@@ -37,6 +47,9 @@ export const useBoardStore = defineStore('boardStore', () => {
 
     const tryToRemoveLines =  () => {
         const userStore = useUserStore();
+        if (!board.value.length) {
+            throw new Error("You must init board before updating board");
+        }
         let linesRemoved = 0;
         const rowsGroup = Object.groupBy(board.value
         .filter((block) => block.isFilled && !block.indestructible),
@@ -85,7 +98,11 @@ export const useBoardStore = defineStore('boardStore', () => {
         board.value = newBoard;
     }
 
+    // TODO: Rename this function, it's not clear
     const maxIsFilled = () => {
+        if (!board.value.length) {
+            throw new Error("You must init board before adding penalty lines");
+        }
         const minCol = tetrominoStore.minCol();
         const maxCol = tetrominoStore.maxCol();
 
@@ -96,9 +113,13 @@ export const useBoardStore = defineStore('boardStore', () => {
 
     const reset = () => {
         board.value = [];
+        initBoard();
     }
 
     const addPenaltyLines = (n_lines: number) => {
+        if (!board.value.length) {
+            throw new Error("You must init board before adding penalty lines");
+        }
         if (n_lines > 20) {
             throw new Error("You cannot have penality lines greater than 20");
         }
@@ -166,6 +187,6 @@ export const useBoardStore = defineStore('boardStore', () => {
         reset,
         refBoard,
         setRefBoard,
-        addPenalityLine: addPenaltyLines,
+        addPenaltyLines,
     }
 });

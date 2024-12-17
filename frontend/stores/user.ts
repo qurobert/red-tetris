@@ -1,3 +1,6 @@
+import {ref} from "vue";
+import {defineStore} from "pinia";
+
 export const useUserStore = defineStore('userStore', () => {
 	const player_name = ref(localStorage.getItem('player_name') as string | null);
 	const score = ref(0);

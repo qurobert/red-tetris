@@ -9,6 +9,10 @@ import {
   PaginationNext,
   PaginationPrev,
 } from '@/components/ui/pagination'
+import {computed, ref} from "vue";
+import {useUserStore} from "~/stores/user";
+import {useRouter} from "#app";
+
 
 const players = [
   {
@@ -89,6 +93,7 @@ function handleUpdate(newPage: number) {
 function startGame() {
   const router = useRouter();
   const route = router.currentRoute.value.fullPath;
+
   router.push(`${route}/${userStore.player_name}`);
 }
 </script>

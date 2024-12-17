@@ -4,6 +4,9 @@ import {
     useInfoTetromino
 } from "~/composables/useInfoTetromino.js";
 import {useBoardStore} from "~/stores/board";
+import {defineStore} from "pinia";
+import {ref} from "vue";
+import {useUserStore} from "~/stores/user";
 
 export enum ModePosition {
     rotate0 = 'rotate0',
@@ -79,6 +82,9 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         const boardStore = useBoardStore();
         const board = boardStore.board;
 
+        if (!board.length) {
+            throw new Error('Board is empty');
+        }
         for (let i = 0; i < newPosition.length; i++) {
             const block = newPosition[i];
             const index = block.row * 10 - (10 - block.col) - 1;

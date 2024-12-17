@@ -6,6 +6,7 @@ import {useForm} from "vee-validate";
 import {FormControl, FormField, FormItem, FormMessage} from "~/components/ui/form";
 import {Input} from "~/components/ui/input";
 import {useUserStore} from "~/stores/user";
+import {useRouter} from "#app";
 
 const userStore = useUserStore();
 const props = defineProps<{
@@ -31,6 +32,8 @@ const onSubmit = form.handleSubmit(({name}) => {
   let id = 0;
 
   // set ID FROM MODE ROOM
+  if (!name)
+    return ;
   userStore.updatePlayerName(name);
   if (props.modeRoom === ModeRoom.create) {
     console.log("Create room");

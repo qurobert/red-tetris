@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {useBoardStore} from "~/stores/board.js";
+import {computed} from "vue";
 
 const boardStore = useBoardStore();
 const filledBoard = computed(() => boardStore.board.filter(block => block.isFilled));

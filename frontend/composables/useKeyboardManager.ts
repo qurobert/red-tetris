@@ -1,7 +1,8 @@
 import {useTetrominoStore} from "~/stores/tetromino";
 import {useGameManager} from "~/composables/useGameManager";
 import {useSwipe} from "@vueuse/core";
-import {sleep} from "@antfu/utils";
+import {useBoardStore} from "#build/imports";
+import {ref, watch} from "vue";
 
 export const useKeyboardManager = () => {
     const intervalIdIfTouch = ref(null as any);
@@ -28,6 +29,8 @@ export const useKeyboardManager = () => {
             if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
                 gameManager.restart();
             e.preventDefault()
+        } else if (e.key === 'r') {
+            boardStore.addPenaltyLines(1);
         }
     }
 

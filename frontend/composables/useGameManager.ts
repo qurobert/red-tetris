@@ -3,6 +3,8 @@ import {useBoardStore} from "~/stores/board";
 import {useKeyboardManager} from "~/composables/useKeyboardManager";
 import {useGameStateStore} from "~/stores/gameState";
 import {NameTetromino} from "~/composables/useInfoTetromino";
+import {shuffle} from "~/utils";
+import {useUserStore} from "~/stores/user";
 
 export const useGameManager = () => {
     const tetrominoStore = useTetrominoStore();

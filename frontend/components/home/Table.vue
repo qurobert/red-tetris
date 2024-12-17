@@ -12,6 +12,7 @@ import {ref} from "vue";
 import {Button} from "~/components/ui/button";
 import HeaderTableRoom from "~/components/home/Header.vue";
 import DialogJoin from "~/components/home/DialogJoin.vue";
+
 const data = [
   {
     id: 1,

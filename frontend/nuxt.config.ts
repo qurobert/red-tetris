@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'shadcn-nuxt',
     '@vesp/nuxt-fontawesome',
+    '@nuxt/test-utils/module'
   ],
   fontawesome: {
     icons: {
@@ -19,4 +20,17 @@ export default defineNuxtConfig({
     '@fortawesome/fontawesome-svg-core/styles.css',
     'assets/css/main.css'
   ],
+  tailwindcss: {
+    configPath: "./tailwind.config.ts",
+  },
+  postcss: {
+    plugins: {
+      tailwindcss: {
+        config: './tailwind.config.ts', // Spécifie le fichier TS directement
+      },
+    },
+  },
+  imports: {
+    autoImport: false
+  },
 })

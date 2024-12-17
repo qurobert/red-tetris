@@ -3,6 +3,7 @@ import {Input} from "~/components/ui/input";
 import {Button} from "~/components/ui/button";
 import HomeRoomDialogContent from "~/components/home/DialogCreate.vue";
 import {ModeRoom} from "~/types/modeRoom";
+import {ref} from "vue";
 
 const props = defineProps<{
   data: any[],
