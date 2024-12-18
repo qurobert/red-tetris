@@ -17,17 +17,6 @@ onUnmounted(() => {
   gameManager.reset();
 })
 
-onBeforeRouteLeave((to, from, next) => {
-  const confirmation = window.confirm(
-      "Vous êtes sur le point de quitter la partie. Voulez-vous continuer ?"
-  );
-  if (confirmation) {
-    gameManager.reset();
-    next();
-  } else {
-    next(false); // Bloque la navigation
-  }
-});
 </script>
 
 <template>

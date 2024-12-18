@@ -4,12 +4,19 @@ import {useGameStateStore} from "~/stores/gameState";
 import {useUserStore} from "~/stores/user";
 import {defineStore} from "pinia";
 import {ref} from "vue";
+import {useSocketStore} from "~/stores/useSocket";
+import {useRoute} from "#app";
 
+interface PenaltyMessage {
+    playerName: string;
+    playerId: string;
+    lines: number;
+}
 export const useBoardStore = defineStore('boardStore', () => {
     const board = ref([] as Board[]);
     const tetrominoStore = useTetrominoStore();
     const refBoard = ref(null as Element | null);
-
+    const penaltyMessage = ref({} as PenaltyMessage);
     const initBoard = () => {
         for (let i = 1; i <= 20; i++) {
             for (let j = 1; j <= 10; j++) {
@@ -78,11 +85,18 @@ export const useBoardStore = defineStore('boardStore', () => {
 
 
         const addScore = Math.round(100 * linesRemoved ** 1.5);
+        const route = useRoute();
         userStore.incrementScore(addScore);
 
         if (linesRemoved > 1) {
-            console.log("REMOVE MORE THAN ONE LINE")
-            // TODO: ADD PENALTY TO USER IF MORE THAN ONE linesRemoved
+            const socketStore = useSocketStore();
+            console.log("EMIT CLEAR LINES");
+            socketStore.socket.emit('clear-lines', route.params.id_room, linesRemoved);
+            setPenaltyMessage({
+                playerName: userStore.player_name as string,
+                playerId: socketStore.socket.id as string,
+                lines: linesRemoved
+            })
         }
     }
 
@@ -176,6 +190,23 @@ export const useBoardStore = defineStore('boardStore', () => {
             }
         }
         board.value = newBoard;
+        recalculateColAndRowValue();
+    }
+
+    const addPenalty = (penaltyInfo: {playerId: string;playerName:string;lines:number}) => {
+        addPenaltyLines(penaltyInfo.lines);
+        setPenaltyMessage(penaltyInfo);
+
+    }
+    const setPenaltyMessage = (penaltyInfo: {playerId: string;playerName:string;lines:number}) => {
+        penaltyMessage.value = {
+            playerName: penaltyInfo.playerName,
+            playerId: penaltyInfo.playerId,
+            lines: penaltyInfo.lines
+        }
+        setTimeout(() => {
+            penaltyMessage.value = {} as PenaltyMessage;
+        }, 4000);
     }
 
     return {
@@ -187,6 +218,7 @@ export const useBoardStore = defineStore('boardStore', () => {
         reset,
         refBoard,
         setRefBoard,
-        addPenaltyLines,
+        penaltyMessage,
+        addPenalty,
     }
 });

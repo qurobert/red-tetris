@@ -29,8 +29,6 @@ export const useKeyboardManager = () => {
             if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
                 gameManager.restart();
             e.preventDefault()
-        } else if (e.key === 'r') {
-            boardStore.addPenaltyLines(1);
         }
     }
 

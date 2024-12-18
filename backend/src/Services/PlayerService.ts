@@ -17,8 +17,8 @@ export class PlayerService {
         this.isHost = isHost;
     }
 
-    updateScore(points: number) {
-        this.currentScore += points;
+    updateScore(score: number) {
+        this.currentScore = score;
         this.highScore = Math.max(this.currentScore, this.highScore);
     }
 

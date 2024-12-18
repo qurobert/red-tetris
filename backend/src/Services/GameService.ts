@@ -7,7 +7,7 @@ export class GameService {
     players: PlayerService[];
     status: 'waiting' | 'playing' | 'finished';
     tetrominos: TetrominosName[];
-    currentPenalties: { playerId: string; lines: number }[] | null;
+    currentPenalties: { playerId: string; playerName: string; lines: number }[] | null;
 
     constructor(id: string, hostPlayer: PlayerService) {
         this.id = id;
@@ -50,8 +50,12 @@ export class GameService {
     handlePenalty(player: PlayerService, linesCleared: number) {
         if (linesCleared >= 2) {
             const penaltyLines = 1 + (linesCleared - 2);
+            if (!this.currentPenalties) {
+                this.currentPenalties = [];
+            }
             this.currentPenalties.push({
                 playerId: player.id,
+                playerName: player.name,
                 lines: penaltyLines
             });
         }
