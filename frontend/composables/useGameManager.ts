@@ -45,9 +45,9 @@ export const useGameManager = () => {
             })
 
             if (!tetrominoStore.tryToSpawn()) {
-                // TODO: EMIT GAME OVER
                 stop();
-                gameState.setGameOver()
+                gameState.setGameOver();
+                socketStore.socket.emit('game-over', route.params.id_room)
             } else {
                 tetrominoStore.restart()
             }
@@ -62,6 +62,7 @@ export const useGameManager = () => {
     }
 
     const reset = () => {
+        console.log("RESET");
         stop();
         boardStore.reset();
         tetrominoStore.reset();

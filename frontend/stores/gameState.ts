@@ -23,12 +23,18 @@ export interface Game {
 export const useGameStateStore = defineStore('gameStateStore', () => {
     const intervalId = ref(null as string | null);
     const gameOver = ref(false);
-    const infoGame = ref({} as Game)
+    const isEndGame = ref(false);
+    const infoGame = ref({} as Game);
+
     const updateIntervalId = (newIntervalId: string | null)=> {
         intervalId.value = newIntervalId;
     }
     const setGameOver = () => {
         gameOver.value = true;
+    }
+
+    const setIsEndGame = (newIsEndGame: boolean) => {
+        isEndGame.value = newIsEndGame;
     }
 
     const setInfoGame = (game: Game) => {
@@ -46,6 +52,8 @@ export const useGameStateStore = defineStore('gameStateStore', () => {
         infoGame,
         reset,
         intervalId,
-        updateIntervalId
+        updateIntervalId,
+        isEndGame,
+        setIsEndGame
     }
 })

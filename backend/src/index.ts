@@ -159,6 +159,22 @@ io.on('connection', (socket) => {
     socket.to(gameId).emit('apply-penalty', game.currentPenalties[game.currentPenalties.length - 1]);
   });
 
+  socket.on('game-over', (gameId: string) => {
+    const game = gameRooms.get(gameId);
+    if (!game) return;
+
+    const player = game.players.find(p => p.id === socket.id);
+    if (!player) return;
+
+    game.removePlayer(socket.id);
+    io.to(gameId).emit('game-updated', game.toJSON());
+
+    if (game.players.length === 1) {
+        gameRooms.delete(gameId);
+        io.to(gameId).emit('game-over', game.toJSON());
+    }
+  })
+
   socket.on('disconnect', () => {
     // Remove player from all games
     console.log('player disconnected:');

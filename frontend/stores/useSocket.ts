@@ -64,6 +64,12 @@ export const useSocketStore = defineStore('socketStore', () => {
             boardStore.addPenalty(penaltyInfo);
         })
 
+        socket.value.on('game-over', () => {
+            const gameStateStore = useGameStateStore();
+            gameStateStore.setIsEndGame(true);
+            router.push('/');
+        })
+
     })
     return {
         socket
