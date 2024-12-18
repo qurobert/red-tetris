@@ -13,7 +13,7 @@ const props = defineProps<{
 const filterValue = ref('')
 
 function onChangeFilter() {
-  props.updateGames(props.data.filter(game => game.players.join("").toLowerCase().includes(filterValue.value.toLowerCase())));
+  props.updateGames(props.data.filter(game => game.players.map((player: any) => player.name).join("").toLowerCase().includes(filterValue.value.toLowerCase())));
 }
 
 </script>

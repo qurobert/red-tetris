@@ -18,7 +18,7 @@ const props = defineProps<{
 const formSchema = yup.object({
   name: yup.string().required("Your name are required"),
 })
-console.log(userStore.player_name);
+
 const form = useForm({
   validationSchema: formSchema,
   initialValues: {
@@ -27,26 +27,24 @@ const form = useForm({
 })
 
 // SUBMIT
-const onSubmit = form.handleSubmit(({name}) => {
+const onSubmit = form.handleSubmit(async ({name}) => {
   const router = useRouter();
-  let id = 0;
 
-  // set ID FROM MODE ROOM
   if (!name)
     return ;
   userStore.updatePlayerName(name);
   if (props.modeRoom === ModeRoom.create) {
-    console.log("Create room");
-    id = Math.floor(Math.random() * 1000000000); // TODO: USE ID RETURN BY BACKEND
+    const newGame : any = await $fetch(`http://localhost:3000/create-game?playerName=${name}`, {
+      method: "GET",
+    });
+    if (newGame && newGame.id)
+      router.push(newGame.id);
   } else {
-    console.log("Join room : " + props.idRoom);
-    if (!props.idRoom)
+    const id = props.idRoom;
+    if (!id)
       return ;
-    id = props.idRoom;
+    router.push(String(id));
   }
-
-
-  router.push({ path: String(id) });  // TODO: USE ID RETURN BY BACKEND
 })
 </script>
 

@@ -8,121 +8,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
 import {Button} from "~/components/ui/button";
 import HeaderTableRoom from "~/components/home/Header.vue";
 import DialogJoin from "~/components/home/DialogJoin.vue";
+import {useAsyncData} from "#app";
+import {useAsyncState} from "@vueuse/core";
 
-const data = [
-  {
-    id: 1,
-    status: 'playing',
-    players: [
-      'Alexis',
-      'Quentin',
-      'Jesse',
-      'Jenny',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 2,
-    status: 'waiting',
-    players: [
-      'Bobby',
-      'Samantha',
-      'Dylan',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 3,
-    status: 'playing',
-    players: [
-      'Megan',
-      'Derek',
-      'Hannah',
-      'John',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 4,
-    status: 'playing',
-    players: [
-      'Liam',
-      'Olivia',
-      'Noah',
-      'Emma',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 5,
-    status: 'waiting',
-    players: [
-      'Katie',
-      'Evan',
-      'Mason',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 6,
-    status: 'playing',
-    players: [
-      'Alexis',
-      'Quentin',
-      'Jesse',
-      'Jenny',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 7,
-    status: 'waiting',
-    players: [
-      'Bobby',
-      'Samantha',
-      'Dylan',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 8,
-    status: 'playing',
-    players: [
-      'Megan',
-      'Derek',
-      'Hannah',
-      'John',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 9,
-    status: 'playing',
-    players: [
-      'Liam',
-      'Olivia',
-      'Noah',
-      'Emma',
-    ],
-    host: 'Alexis',
-  },
-  {
-    id: 10,
-    status: 'waiting',
-    players: [
-      'Katie',
-      'Evan',
-      'Mason',
-    ],
-    host: 'Alexis',
-  },
-];
+const {state , isReady} = useAsyncState(await $fetch('http://localhost:3000/games'), [] as any[]);
 
-const games = ref(data);
+const games = ref(null as any[] | null);
+
+watch(state, (newState) => {
+  games.value = newState;
+})
 
 function updateGames(newGames: any[]) {
   games.value = newGames;
@@ -130,7 +29,7 @@ function updateGames(newGames: any[]) {
 </script>
 
 <template>
-  <HeaderTableRoom :data="data" :update-games="updateGames" />
+  <HeaderTableRoom :data="state" :update-games="updateGames" v-if="isReady"/>
   <DialogJoin v-slot="{setIdRoom, toggleDialog}">
     <Table>
       <TableHeader>
@@ -141,7 +40,7 @@ function updateGames(newGames: any[]) {
         </TableRow>
       </TableHeader>
       <TableBody>
-          <TableRow v-for="game in games" :key="game.id" :class="game.status === 'playing' ? 'cursor-pointer' : ''" @click="() => {setIdRoom(game.id);toggleDialog()}">
+          <TableRow v-for="game in games" :key="game.id" :class="game.status === 'playing' ? 'cursor-pointer' : ''" @click="() => {if (game.status === 'playing') return ;setIdRoom(game.id);toggleDialog()}">
               <TableCell>
                 <div class="flex items-center">
                   <font-awesome :icon="(game.status === 'playing' ? 'fa-solid' : 'fa-regular') + ' fa-circle'" class="mr-2"/>
@@ -149,10 +48,10 @@ function updateGames(newGames: any[]) {
                 </div>
               </TableCell>
               <TableCell class="truncate max-w-32">
-                {{ game.players.join(", ") }}
+                {{ game.players.map((player: any) => player.name).join(", ") }}
               </TableCell>
               <TableCell class="text-right">
-                  <Button size="sm" :variant="game.status === 'playing' ? 'default' : 'secondary'" :disabled="game.status !== 'playing'">
+                  <Button size="sm" :variant="game.status !== 'playing' ? 'default' : 'secondary'" :disabled="game.status === 'playing'">
                     Join
                   </Button>
               </TableCell>

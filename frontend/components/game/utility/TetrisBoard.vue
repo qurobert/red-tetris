@@ -26,7 +26,7 @@ const setDivRef = (divRef: any) => {
        }"
        :ref="setDivRef"
   >
-    <!--    Header Tetris Board Game    -->
+    <!--    Header Tetris Board GameService    -->
     <div v-for="index in 4" class="bg-[#666]" :class="{
       'left grid grid-rows-22 grid-cols-1': index == 1, // left
       'right grid grid-rows-22 grid-cols-1': index == 2, // right

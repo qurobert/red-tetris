@@ -26,6 +26,7 @@
     "nuxt": "^3.14.1592",
     "pinia": "^2.2.8",
     "radix-vue": "^1.9.11",
+    "socket.io-client": "^4.8.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vee-validate": "^4.14.7",
