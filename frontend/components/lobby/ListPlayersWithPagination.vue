@@ -9,8 +9,6 @@ import {
   PaginationPrev
 } from "~/components/ui/pagination";
 import {computed, ref} from "vue";
-import {useUserStore} from "~/stores/user";
-import {useRouter} from "#app";
 import {useLobbyStore} from "~/stores/lobby";
 
 const page = ref(1);

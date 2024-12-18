@@ -21,7 +21,6 @@ function formatBoard(board: Board[]) {
     const filteredBoard = board.filter(b => b.isFilled && !b.indestructible && b.col === i)
     const minRow = !filteredBoard.length ? undefined : Math.min(...filteredBoard?.map(b => b.row))
     const boardMinRow = board.find(b => b.row === minRow && b.col === i) as Board
-    console.log("MINROW", minRow);
     for (let j = 1; j <= 20; j++) {
       if (j === minRow) {
         newBoard.push(_.cloneDeep(boardMinRow) as Board)
@@ -44,7 +43,6 @@ function formatBoard(board: Board[]) {
       }
     }
   }
-  console.log(newBoard);
   return newBoard;
 }
 </script>

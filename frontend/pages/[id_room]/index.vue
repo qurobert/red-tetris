@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import {onMounted} from "vue";
-import {useRouter} from "#app";
 import {useLobbyStore} from "~/stores/lobby";
 import ListPlayersWithPagination from "~/components/lobby/ListPlayersWithPagination.vue";
 import ActionsLobby from "~/components/lobby/ActionsLobby.vue";
+import DialogEndGame from "~/components/lobby/DialogEndGame.vue";
+import {onMounted} from "vue";
+import {useRouter} from "#app";
 
 const lobbyStore = useLobbyStore();
 
@@ -23,5 +24,6 @@ onMounted(() => {
     </h1>
     <ListPlayersWithPagination />
     <ActionsLobby />
+    <DialogEndGame />
   </div>
 </template>

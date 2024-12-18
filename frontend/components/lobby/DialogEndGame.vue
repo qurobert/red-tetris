@@ -3,28 +3,51 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {Separator} from "~/components/ui/separator";
 import {useGameStateStore} from "~/stores/gameState";
+import {useRouter} from "#app";
 
 const gameStateStore = useGameStateStore()
+function goToHome() {
+  const router = useRouter();
+
+  gameStateStore.setIsEndGame(false)
+  router.push('/')
+}
+console.log(gameStateStore.gameOver)
 </script>
 
 <template>
   <Dialog :open="gameStateStore.isEndGame" @update:open="gameStateStore.setIsEndGame" v-if="gameStateStore.isEndGame">
     <DialogContent>
       <DialogHeader>
-        <DialogTitle>Edit profile</DialogTitle>
+        <DialogTitle>
+          <span v-if="!gameStateStore.gameOver">
+            You won !
+          </span>
+          <span v-else>
+             You lost...
+          </span>
+        </DialogTitle>
         <DialogDescription>
-          Make changes to your profile here. Click save when you're done.
+          <span v-if="!gameStateStore.gameOver">
+            Congratulations
+          </span>
+          <span v-else>
+            Better luck next time
+          </span>
         </DialogDescription>
       </DialogHeader>
-
-      <DialogFooter>
-        Save changes
-      </DialogFooter>
+      <Button @click="gameStateStore.setIsEndGame(false)">
+        Close
+      </Button>
+      <Separator />
+      <Button @click="goToHome" variant="secondary">
+        Go to home
+      </Button>
     </DialogContent>
   </Dialog>
 </template>
