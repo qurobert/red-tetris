@@ -9,6 +9,26 @@ const gameState = useGameStateStore();
 const userStore = useUserStore();
 
 const players = computed(() => gameState.infoGame?.players?.filter(player => player.id !== userStore.id));
+
+function formatBoard(board: Board[]) {
+  let newBoard = [] as Board[]
+
+  for (let i = 0; i < 20; i++) {
+    const minRow = Math.min(...board.map(b => b.row))
+    newBoard.push(board.find(b => b.row === minRow) as Board)
+    for (let j = minRow; j < 20; j++) {
+      newBoard.push({
+        row: j,
+        col: i,
+        color: 'bg-white',
+        isFilled: true,
+        indestructible: false
+      })
+    }
+  }
+  console.log(newBoard);
+  return newBoard;
+}
 </script>
 
 <template>
@@ -20,7 +40,7 @@ const players = computed(() => gameState.infoGame?.players?.filter(player => pla
       </div>
       <div v-for="(player, index) in players?.sort((a, b) => b.currentScore - a.currentScore)" class="flex-col justify-center" v-else>
         <TetrisBoard size="sm">
-          <Block :col="block.col" :row="block.row" :color="block.color ?? ''" :is-border="false" v-for="block in player.board" />
+          <Block :col="block.col" :row="block.row" :color="block.color ?? ''" :is-border="false" v-for="block in formatBoard(player.board)" />
         </TetrisBoard>
         <p class="text-center mt-2">{{player.name}} #{{index + 1}}</p>
         <p class="text-center">{{player.currentScore}}</p>
