@@ -1,14 +1,21 @@
 <script setup lang="ts">
 import {NameTetromino, useInfoTetromino} from "~/composables/useInfoTetromino";
-import {ModePosition} from "~/stores/tetromino";
+import {ModePosition, useTetrominoStore} from "~/stores/tetromino";
 import Blocks from "~/components/game/utility/Blocks.vue";
 import {useUserStore} from "~/stores/user";
+import {useGameManager} from "~/composables/useGameManager";
+import {computed} from "vue";
 
 const userStore = useUserStore();
+const tetrominoStore = useTetrominoStore();
 const infoTetromino = useInfoTetromino();
-const nameTetromino = NameTetromino.Z
-const positionsTetromino = infoTetromino.getPosition(nameTetromino, 0, 0)[ModePosition.rotate0];
-const color = infoTetromino.getColor(nameTetromino);
+const tetromino = computed(() => {
+  if (!tetrominoStore.nextTetrominoLetter) return ;
+  return {
+    position: infoTetromino.getPosition(tetrominoStore.nextTetrominoLetter, 0, 0)[ModePosition.rotate0],
+    color: infoTetromino.getColor(tetrominoStore.nextTetrominoLetter)
+  }
+});
 </script>
 
 <template>
@@ -18,7 +25,7 @@ const color = infoTetromino.getColor(nameTetromino);
         Next
       </h2>
       <div class="grid grid-cols-4 grid-rows-4 w-20 h-20">
-        <Blocks :positions="positionsTetromino" :color="color" />
+        <Blocks :positions="tetromino?.position" :color="tetromino?.color ?? ''" />
       </div>
     </div>
     <div class="text-center">

@@ -8,6 +8,7 @@ import { PlayerService } from './Services/PlayerService';
 import { GameService } from './Services/GameService';
 import { v4 as uuidv4 } from 'uuid';
 import { cors } from 'hono/cors'
+import {Board} from "./types/board";
 
 const app = new Hono()
 
@@ -29,7 +30,7 @@ app.get('/', async (c) => {
 })
 
 app.get('/create-game', async (c) => {
-  return c.json(createGame(c.req.query('playerName')))
+  return c.json(createGame(c.req.query('playerName'), c.req.query('playerId')))
 })
 
 app.get('games', async (c) => {
@@ -51,9 +52,8 @@ const io = new Server(httpServer as HTTPServer, {
 // GameService rooms storage
 const gameRooms = new Map<string, GameService>();
 
-const createGame = (playerName: string) => {
+const createGame = (playerName: string, playerId: string) => {
     const gameId = uuidv4();
-    const playerId = uuidv4();
     const hostPlayer = new PlayerService(playerId, playerName, true);
     const newGame = new GameService(gameId, hostPlayer);
 
@@ -66,11 +66,15 @@ const getGames = () => {
     return Array.from(gameRooms.values()).map(game => game.toJSON())
 }
 
+const getGame = (gameId: string) => {
+    return gameRooms.get(gameId)
+}
+
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
 
   // // Create a new game room
-  // socket.on('create-game', (playerName: string) => {
+  // socket.value.on('create-game', (playerName: string) => {
   //   const gameId = uuidv4();
   //   const hostPlayer = new PlayerService(socket.id, playerName, true);
   //   const newGame = new GameService(gameId, hostPlayer);
@@ -82,16 +86,18 @@ io.on('connection', (socket) => {
   // });
 
   // Join an existing game room
-  socket.on('join-game', (gameId: string, playerName: string) => {
+  socket.on('join-game', (gameId: string, playerName: string, playerId: string, highScore: number) => {
     const game = gameRooms.get(gameId);
     if (!game) {
       socket.emit('error', 'GameService room not found');
       return;
     }
 
-    const newPlayer = new PlayerService(socket.id, playerName);
+    const newPlayer = new PlayerService(playerId, playerName, false, highScore);
     try {
-      game.addPlayer(newPlayer);
+      if (!game.players.find(p => p.id === playerId)) {
+        game.addPlayer(newPlayer);
+      }
       socket.join(gameId);
 
       io.to(gameId).emit('game-updated', game.toJSON());
@@ -101,15 +107,16 @@ io.on('connection', (socket) => {
   });
 
   // Start the game
-  socket.on('start-game', (gameId: string) => {
+  socket.on('start-game', (gameId: string, playerId: string) => {
     const game = gameRooms.get(gameId);
     if (!game) {
       socket.emit('error', 'GameService room not found');
       return;
     }
 
+    console.log('start game');
     // Ensure only the host can start the game
-    const player = game.players.find(p => p.id === socket.id);
+    const player = game.players.find(p => p.id === playerId);
     if (!player?.isHost) {
       socket.emit('error', 'Only the host can start the game');
       return;
@@ -123,14 +130,40 @@ io.on('connection', (socket) => {
     }
   });
 
+  interface GameState {
+    score: number;
+    board: Board[],
+  }
   // Handle game updates
-  socket.on('game-update', (gameId: string, gameState: any) => {
+  socket.on('game-update', (gameId: string, playerId: string, gameState: GameState) => {
+    console.log("GAME UPDATE BACK !");
+    console.log('gameId : ', gameId, 'gameState : ', gameState.score)
     const game = gameRooms.get(gameId);
     if (!game) return;
 
-    // Broadcast game state to all players in the room
-    socket.to(gameId).emit('game-state-update', gameState);
+    const index = game.players.findIndex(p => p.id === playerId);
+    if (!game.players[index]) return;
+
+    game.players[index].updateBoard(gameState.board);
+    game.players[index].updateScore(gameState.score);
+    console.log("GAME", game.toJSON());
+    socket.to(gameId).emit('game-update', game.toJSON());
   });
+
+  socket.on('info-game', (gameId: string, playerId: string) => {
+    const game = gameRooms.get(gameId);
+    if (!game) {
+        socket.emit('error', 'Game not found');
+        return;
+    }
+
+    const player = game.players.find(p => p.id === playerId);
+    if (!player) {
+        socket.emit('error', 'Player not found in game');
+        return;
+    }
+    socket.emit('info-game', game.toJSON());
+  })
 
   // Handle line clearing and penalty
   socket.on('clear-lines', (gameId: string, playerId: string, linesCleared: number) => {
@@ -143,11 +176,12 @@ io.on('connection', (socket) => {
     game.handlePenalty(player, linesCleared);
 
     // Broadcast penalty to all players except the one who cleared lines
-    socket.to(gameId).emit('apply-penalty', game.currentPenalties);
+    socket.to(gameId).emit('apply-penalty', game.currentPenalties[game.currentPenalties.length - 1]);
   });
 
   socket.on('disconnect', () => {
     // Remove player from all games
+    // @ts-ignore
     for (const [gameId, game] of gameRooms.entries()) {
       const playerIndex = game.players.findIndex(p => p.id === socket.id);
       if (playerIndex !== -1) {

@@ -5,7 +5,7 @@ import {
 } from "~/composables/useInfoTetromino.js";
 import {useBoardStore} from "~/stores/board";
 import {defineStore} from "pinia";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {useUserStore} from "~/stores/user";
 
 export enum ModePosition {
@@ -22,9 +22,29 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
     const positions = ref({} as InfoPositionTetromino);
     const refColor = ref('');
     const modePosition  = ref(ModePosition.rotate0);
+    const lettersTetrominos = ref([] as NameTetromino[]);
+    const indexNameTetromino = ref(0);
 
+    const currentTetrominoLetter = computed(() => {
+        return lettersTetrominos.value[indexNameTetromino.value];
+    })
 
-    const init = (name: NameTetromino) => {
+    const nextTetrominoLetter = computed(() => {
+        return lettersTetrominos.value[indexNameTetromino.value + 1];
+    });
+
+    const updateTetrominos = (newLetters: NameTetromino[]) => {
+        lettersTetrominos.value = newLetters;
+    }
+
+    const incrementIndexNameTetromino = () => {
+        indexNameTetromino.value++;
+        if (indexNameTetromino.value >= lettersTetrominos.value.length) {
+            indexNameTetromino.value = 0;
+        }
+    }
+    const init = () => {
+        const name = lettersTetrominos.value[indexNameTetromino.value];
         const infoTetromino = useInfoTetromino();
         const position = infoTetromino.getPosition(name, colPosition.value, rowPosition.value);
         const color = infoTetromino.getColor(name);
@@ -34,18 +54,19 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         refColor.value = color;
     }
 
-    const tryToSpawn = (name: NameTetromino) => {
+    const tryToSpawn = () => {
+        const name = lettersTetrominos.value[indexNameTetromino.value];
         const infoTetromino = useInfoTetromino();
         const newPositions = infoTetromino.getPosition(name, 4, 1);
         if (!verifyNewPosition(newPositions['rotate0'])) return false;
         return true;
     }
 
-    const restart = (newName: NameTetromino) => {
+    const restart = () => {
         colPosition.value = 4;
         rowPosition.value = 1;
         modePosition.value = ModePosition.rotate0;
-        init(newName);
+        init();
     }
     const reset = () => {
         refName.value = null;
@@ -208,5 +229,10 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         tryMoveDown,
         tryToSpawn,
         getPosition,
+
+        currentTetrominoLetter,
+        nextTetrominoLetter,
+        incrementIndexNameTetromino,
+        updateTetrominos
     }
 })

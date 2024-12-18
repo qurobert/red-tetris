@@ -65,6 +65,7 @@ export class GameService {
                 id: player.id,
                 name: player.name,
                 highScore: player.highScore,
+                board: player.board,
                 isHost: player.isHost,
                 currentScore: player.currentScore
             })),

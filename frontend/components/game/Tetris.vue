@@ -8,33 +8,7 @@ import TetrisBoard from "~/components/game/utility/TetrisBoard.vue";
 import {onMounted, onUnmounted} from "vue";
 import {onBeforeRouteLeave} from "#app";
 
-const gameManager = useGameManager();
 const gameStateStore = useGameStateStore();
-function beforeUnload(e: Event) {
-  e.preventDefault();
-}
-
-onMounted(() => {
-  gameManager.init();
-  window.addEventListener('beforeunload', beforeUnload)
-})
-
-onUnmounted(() => {
-  gameManager.reset();
-  window.removeEventListener('beforeunload', beforeUnload);
-})
-
-onBeforeRouteLeave((to, from, next) => {
-    const confirmation = window.confirm(
-        "Vous êtes sur le point de quitter la partie. Voulez-vous continuer ?"
-    );
-    if (confirmation) {
-      gameManager.reset();
-      next(); // Autorise la navigation
-    } else {
-      next(false); // Bloque la navigation
-    }
-});
 </script>
 
 <template>

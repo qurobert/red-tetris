@@ -11,13 +11,13 @@ import FormDialogCreateOrJoin from "~/components/home/FormDialogCreateOrJoin.vue
 import {ref} from "vue";
 
 const isOpen = ref(false);
-const idRoom = ref(0);
+const idRoom = ref('');
 
 function toggleDialog() {
   isOpen.value = !isOpen.value;
 }
 
-function setIdRoom(newIdRoom: number) {
+function setIdRoom(newIdRoom: string) {
   idRoom.value = newIdRoom;
 }
 

@@ -2,48 +2,60 @@ import {useTetrominoStore} from "~/stores/tetromino";
 import {useBoardStore} from "~/stores/board";
 import {useKeyboardManager} from "~/composables/useKeyboardManager";
 import {useGameStateStore} from "~/stores/gameState";
-import {NameTetromino} from "~/composables/useInfoTetromino";
-import {shuffle} from "~/utils";
 import {useUserStore} from "~/stores/user";
+import {useSocketStore} from "~/stores/useSocket";
+import {useRoute} from "#app";
 
 export const useGameManager = () => {
     const tetrominoStore = useTetrominoStore();
     const boardStore = useBoardStore();
     const gameState = useGameStateStore();
     const userStore = useUserStore();
-    const letters : NameTetromino[] = [
-      NameTetromino.I,
-      NameTetromino.J,
-      NameTetromino.L,
-      NameTetromino.O,
-      NameTetromino.S,
-      NameTetromino.T,
-      NameTetromino.Z
-    ]
-    // TODO : FETCH API TO GET LETTERS IN API OR STORE
+    const socketStore = useSocketStore();
     const keyboardManager = useKeyboardManager();
+    const beforeUnload = (e: Event) => {
+        e.preventDefault();
+    }
 
     const init = () => {
+        console.log("INIT");
+        const route = useRoute();
+        socketStore.socket.emit('info-game', route.params.id_room, userStore.id);
+    }
+    const start = (game: any) => {
+        console.log("START");
+        gameState.updateIntervalId(setInterval(() => update(), 1000) as any);
+        tetrominoStore.updateTetrominos(game.tetrominos);
+        tetrominoStore.init();
         boardStore.initBoard();
         keyboardManager.init();
-        tetrominoStore.init(NameTetromino.T);
-        gameState.resetGameOver()
-        start();
-    }
-    const start = () => {
-        gameState.updateIntervalId(setInterval(() => update(), 1000) as any);
+        gameState.reset();
+        console.log(game);
+        gameState.setInfoGame(game);
+        window.addEventListener('beforeunload', beforeUnload);
     }
 
     const update = () => {
+        console.log("UPDATE");
         if (!tetrominoStore.tryMoveDown()) {
             boardStore.updateBoardFromTetromino();
             boardStore.tryToRemoveLines();
-            shuffle(letters)
-            if (!tetrominoStore.tryToSpawn(letters[0])) {
+            tetrominoStore.incrementIndexNameTetromino();
+            // TODO: NO MORE TETROMINOS ASK FOR NEW ONES
+            const socketStore = useSocketStore();
+            const route = useRoute();
+            const userStore = useUserStore();
+            socketStore.socket.emit('game-update', route.params.id_room, userStore.id, {
+                score: userStore.score,
+                board: boardStore.board,
+            })
+
+
+            if (!tetrominoStore.tryToSpawn()) {
                 stop();
                 gameState.setGameOver()
             } else {
-                tetrominoStore.restart(letters[0])
+                tetrominoStore.restart()
             }
         } else {
             tetrominoStore.moveDown();
@@ -52,16 +64,17 @@ export const useGameManager = () => {
 
     const restart = () => {
         stop();
-        start();
+        init();
     }
 
     const reset = () => {
         stop();
         boardStore.reset();
         tetrominoStore.reset();
-        gameState.resetGameOver();
+        gameState.reset();
         keyboardManager.reset();
         userStore.reset();
+        window.removeEventListener('beforeunload', beforeUnload);
     }
 
     const stop = () => {
@@ -77,6 +90,6 @@ export const useGameManager = () => {
         reset,
         restart,
         stop,
-        update
+        update,
     }
 };

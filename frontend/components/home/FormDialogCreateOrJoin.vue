@@ -7,11 +7,12 @@ import {FormControl, FormField, FormItem, FormMessage} from "~/components/ui/for
 import {Input} from "~/components/ui/input";
 import {useUserStore} from "~/stores/user";
 import {useRouter} from "#app";
+import {useSocket} from "~/stores/useSocket";
 
 const userStore = useUserStore();
 const props = defineProps<{
   modeRoom: ModeRoom,
-  idRoom?: number
+  idRoom?: string
 }>()
 
 // FORM
@@ -29,20 +30,23 @@ const form = useForm({
 // SUBMIT
 const onSubmit = form.handleSubmit(async ({name}) => {
   const router = useRouter();
-
+  const userStore = useUserStore();
   if (!name)
     return ;
   userStore.updatePlayerName(name);
   if (props.modeRoom === ModeRoom.create) {
-    const newGame : any = await $fetch(`http://localhost:3000/create-game?playerName=${name}`, {
+    const newGame : any = await $fetch(`http://localhost:3000/create-game?playerName=${name}&playerId=${userStore.id}`, {
       method: "GET",
     });
-    if (newGame && newGame.id)
+    if (newGame && newGame.id) {
+      userStore.setIsAdmin(true);
       router.push(newGame.id);
+    }
   } else {
     const id = props.idRoom;
     if (!id)
       return ;
+    userStore.setIsAdmin(false);
     router.push(String(id));
   }
 })
