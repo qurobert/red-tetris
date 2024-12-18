@@ -3,7 +3,6 @@ import {defineStore} from "pinia";
 
 export const useUserStore = defineStore('userStore', () => {
 	const player_name = ref(localStorage.getItem('player_name') as string | null);
-	const id = ref(Math.random().toString(36).substr(2, 9));
 	const score = ref(0);
 	const highScore = ref(localStorage.getItem('highScore') as number | null || 0);
 	const rank = ref(1);
@@ -42,7 +41,6 @@ export const useUserStore = defineStore('userStore', () => {
 	}
 
 	return {
-		id,
 		player_name,
 		isAdmin,
 		setIsAdmin,

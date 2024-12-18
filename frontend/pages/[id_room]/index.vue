@@ -24,6 +24,7 @@ const playersPage = computed(() => {
   const end = start + itemsPerPage;
   return lobbyStore.players.slice(start, end);
 })
+
 const itemsPerPage = 5;
 const userStore = useUserStore();
 
@@ -40,40 +41,19 @@ function goToGame() {
 function startGame() {
   const socketStore = useSocketStore();
   const route = useRoute();
-  const userStore = useUserStore();
   socketStore.socket.emit('start-game',
-      route.params.id_room,
-      userStore.id,
+      route.params.id_room
   );
 
   goToGame();
 }
-
 onMounted(() => {
-  const socketStore = useSocketStore();
-  const userStore = useUserStore();
-  const route = useRoute();
   const router = useRouter();
 
-  socketStore.socket.on('connect', () => {
-
-
-    socketStore.socket.on('error', (_: string) => {
-      router.push('/');
-    });
-  });
-
-  socketStore.socket.emit('join-game',
-      route.params.id_room,
-      userStore.player_name,
-      userStore.id,
-      userStore.highScore
-  );
+  if (!lobbyStore.players.length) {
+    router.push('/');
+  }
 })
-// onUnmounted(() => {
-  // const socket = useSocket();
-  // socketStore.socket.emit('leave-game');
-// })
 </script>
 
 <template>

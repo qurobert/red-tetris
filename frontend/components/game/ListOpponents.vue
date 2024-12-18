@@ -2,13 +2,12 @@
 import TetrisBoard from "~/components/game/utility/TetrisBoard.vue";
 import Block from "~/components/game/utility/Block.vue";
 import {useGameStateStore} from "~/stores/gameState";
-import {useUserStore} from "~/stores/user";
 import {computed} from "vue";
+import {useSocketStore} from "#imports";
 
 const gameState = useGameStateStore();
-const userStore = useUserStore();
-
-const players = computed(() => gameState.infoGame?.players?.filter(player => player.id !== userStore.id));
+const socketStore = useSocketStore();
+const players = computed(() => gameState.infoGame?.players?.filter(player => player.id !== socketStore.socket.id));
 </script>
 
 <template>

@@ -13,45 +13,39 @@ export const useGameManager = () => {
     const userStore = useUserStore();
     const socketStore = useSocketStore();
     const keyboardManager = useKeyboardManager();
-    const beforeUnload = (e: Event) => {
-        e.preventDefault();
-    }
 
     const init = () => {
-        console.log("INIT");
         const route = useRoute();
-        socketStore.socket.emit('info-game', route.params.id_room, userStore.id);
+        socketStore.socket.emit('info-game', route.params.id_room);
     }
     const start = (game: any) => {
-        console.log("START");
-        gameState.updateIntervalId(setInterval(() => update(), 1000) as any);
         tetrominoStore.updateTetrominos(game.tetrominos);
         tetrominoStore.init();
         boardStore.initBoard();
         keyboardManager.init();
         gameState.reset();
-        console.log(game);
         gameState.setInfoGame(game);
-        window.addEventListener('beforeunload', beforeUnload);
+        launchUpdate();
     }
 
+    const launchUpdate = () => {
+        gameState.updateIntervalId(setInterval(() => update(), 1000) as any);
+    }
     const update = () => {
-        console.log("UPDATE");
         if (!tetrominoStore.tryMoveDown()) {
             boardStore.updateBoardFromTetromino();
             boardStore.tryToRemoveLines();
             tetrominoStore.incrementIndexNameTetromino();
-            // TODO: NO MORE TETROMINOS ASK FOR NEW ONES
             const socketStore = useSocketStore();
             const route = useRoute();
             const userStore = useUserStore();
-            socketStore.socket.emit('game-update', route.params.id_room, userStore.id, {
+            socketStore.socket.emit('game-update', route.params.id_room, {
                 score: userStore.score,
                 board: boardStore.board,
             })
 
-
             if (!tetrominoStore.tryToSpawn()) {
+                // TODO: EMIT GAME OVER
                 stop();
                 gameState.setGameOver()
             } else {
@@ -64,7 +58,7 @@ export const useGameManager = () => {
 
     const restart = () => {
         stop();
-        init();
+        launchUpdate();
     }
 
     const reset = () => {
@@ -74,7 +68,6 @@ export const useGameManager = () => {
         gameState.reset();
         keyboardManager.reset();
         userStore.reset();
-        window.removeEventListener('beforeunload', beforeUnload);
     }
 
     const stop = () => {
