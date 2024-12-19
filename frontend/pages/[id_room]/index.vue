@@ -17,10 +17,10 @@ onMounted(() => {
   }
 })
 
-onBeforeRouteLeave(() => {
-  const socketStore = useSocketStore();
-  socketStore.socket.emit('leave-lobby');
-})
+// onBeforeRouteLeave(() => {
+//   const socketStore = useSocketStore();
+//   socketStore.socket.emit('leave-lobby');
+// })
 </script>
 
 <template>
