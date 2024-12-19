@@ -7,6 +7,7 @@ export class PlayerService {
     currentScore: number;
     highScore: number;
     isHost: boolean;
+    hasFinishedGame: boolean
 
     constructor(id: string, name: string, isHost: boolean = false, highScore: number = 0) {
         this.id = id;
@@ -15,6 +16,7 @@ export class PlayerService {
         this.currentScore = 0;
         this.highScore = highScore;
         this.isHost = isHost;
+        this.hasFinishedGame = false;
     }
 
     updateScore(score: number) {
