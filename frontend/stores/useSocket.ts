@@ -15,28 +15,33 @@ export const useSocketStore = defineStore('socketStore', () => {
 
     socket.value.on('connect', () => {
         socket.value.on('info-game', (game: any) => {
+            console.log("INFO GAME");
             const gameManager = useGameManager();
             gameManager.start(game);
         })
 
-        socket.value.on('error', () => {
+        socket.value.on('error', (msg: any) => {
+            console.log("ERROR", msg);
             router.push({
                 path: '/'
             });
         })
 
-        socket.value.on('game-update', (data: any) => {
-            console.log("GAME UPDATE", data);
+        socket.value.on('game-update', (game: any) => {
+            console.log("GAME UPDATE", game);
             const gameState = useGameStateStore();
 
-            gameState.setInfoGame(data);
+            gameState.setInfoGame(game);
         })
 
-        socket.value.on('game-started', () => {
+        socket.value.on('game-started', (game: any) => {
             console.log("GAME STARTED");
             const route = router.currentRoute.value.fullPath;
+            const gameState = useGameStateStore();
 
             router.push(`${route}/${userStore.player_name}`);
+
+            gameState.setInfoGame(game);
         });
 
         socket.value.on('game-created', (game: any) => {
@@ -51,7 +56,7 @@ export const useSocketStore = defineStore('socketStore', () => {
         socket.value.on('game-updated', (game: any) => {
             console.log("UPDATED GAME", game);
 
-            if (game.host === userStore.player_name) {
+            if (game.players.find((p: any) => p.id === socket.value.id && p.isHost)) {
                 userStore.setIsAdmin(true);
             } else {
                 userStore.setIsAdmin(false);
@@ -78,6 +83,7 @@ export const useSocketStore = defineStore('socketStore', () => {
         })
 
         socket.value.on('game-over', () => {
+            console.log("GAME OVER");
             const gameStateStore = useGameStateStore();
             const route = useRoute();
 

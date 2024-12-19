@@ -70,13 +70,14 @@ io.on('connection', (socket) => {
 
         gameRooms.set(gameId, newGame);
         socket.join(gameId);
-        console.log('game created:', gameId, newGame.toJSON());
+        console.log('game created:', gameId);
 
         io.to(gameId).emit('game-created', newGame.toJSON());
     });
 
     // Join an existing game room
     socket.on('join-game', (gameId: string, playerName: string, highScore: number) => {
+        console.log("JOIN GAME");
         const game = gameRooms.get(gameId);
         if (!game) {
             socket.emit('error', 'GameService room not found');
@@ -99,13 +100,13 @@ io.on('connection', (socket) => {
 
     // Start the game
     socket.on('start-game', (gameId: string) => {
+        console.log("START GAME");
         const game = gameRooms.get(gameId);
         if (!game) {
             socket.emit('error', 'GameService room not found');
             return;
         }
 
-        console.log('start game');
         // Ensure only the host can start the game
         const player = game.players.find(p => p.id === socket.id);
         if (!player?.isHost) {
@@ -127,6 +128,7 @@ io.on('connection', (socket) => {
     }
     // Handle game updates
     socket.on('game-update', (gameId: string, gameState: GameState) => {
+        console.log("GAME UPDATE");
         const game = gameRooms.get(gameId);
         if (!game) return;
 
@@ -139,6 +141,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('info-game', (gameId: string) => {
+        console.log("INFO GAME");
         const game = gameRooms.get(gameId);
         if (!game) {
             socket.emit('error', 'Game not found');
@@ -155,6 +158,7 @@ io.on('connection', (socket) => {
 
     // Handle line clearing and penalty
     socket.on('clear-lines', (gameId: string, linesCleared: number) => {
+        console.log("CLEAR LINES");
         const game = gameRooms.get(gameId);
         if (!game) return;
 
@@ -167,6 +171,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('game-over', (gameId: string) => {
+        console.log("GAME OVER");
         const game = gameRooms.get(gameId);
         if (!game) return;
 
@@ -176,15 +181,20 @@ io.on('connection', (socket) => {
         player.hasFinishedGame = true
         io.to(gameId).emit('game-updated', game.toJSON());
 
-        const players = getInGamePlayers(game).length
-        if (players <= 1) {
-            gameRooms.delete(gameId);
+
+        const players = getInGamePlayers(game)
+        if (players.length <= 1) {
+            for (const player of game.players) {
+                player.updateBoard([]);
+                player.updateScore(0);
+            }
             io.to(gameId).emit('game-over', game.toJSON());
         }
     })
 
     socket.on('disconnect', () => {
         // Remove player from all games
+        console.log('player disconnected:');
         console.log('player disconnected:');
         // @ts-ignore
         for (const [gameId, game] of gameRooms.entries()) {

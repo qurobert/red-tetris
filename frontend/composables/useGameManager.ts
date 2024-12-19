@@ -23,6 +23,7 @@ export const useGameManager = () => {
         tetrominoStore.init();
         boardStore.initBoard();
         keyboardManager.init();
+        console.log("INIT EVENT LISTENER :", !!keyboardManager.eventListenerRef.value);
         gameState.init();
         gameState.setInfoGame(game);
         launchUpdate();
@@ -62,6 +63,8 @@ export const useGameManager = () => {
     }
 
     const reset = () => {
+        console.log("RESET EVENT LISTENER :", !!keyboardManager.eventListenerRef.value);
+
         stop();
         boardStore.reset();
         tetrominoStore.reset();

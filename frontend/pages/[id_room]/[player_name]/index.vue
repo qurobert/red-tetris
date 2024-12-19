@@ -4,7 +4,7 @@ import InfoBoard from "~/components/game/InfoBoard.vue";
 import ListOpponents from "~/components/game/ListOpponents.vue";
 import MessagePenalty from "~/components/game/MessagePenalty.vue";
 import {useGameManager} from "#imports";
-import {onMounted, onUnmounted} from "vue";
+import {onMounted, onBeforeUnmount} from "vue";
 
 const gameManager = useGameManager();
 
@@ -13,7 +13,8 @@ onMounted(() => {
   gameManager.init();
 })
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
+  console.log("RESET GAME");
   gameManager.reset();
 })
 

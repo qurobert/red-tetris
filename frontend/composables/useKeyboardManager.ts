@@ -6,30 +6,42 @@ import {ref, watch} from "vue";
 
 export const useKeyboardManager = () => {
     const intervalIdIfTouch = ref(null as any);
-    const eventListener = (e: KeyboardEvent) => {
-        const gameManager = useGameManager();
-        const tetrominoStore = useTetrominoStore();
-        const boardStore = useBoardStore();
-        if (e.key === 'ArrowUp') {
-            tetrominoStore.rotate();
-            e.preventDefault()
-        } else if (e.key === 'ArrowDown') {
-            tetrominoStore.moveDown();
-            if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
-                gameManager.restart();
-            e.preventDefault()
-        } else if (e.key === 'ArrowLeft') {
-            tetrominoStore.moveLeft();
-            e.preventDefault()
-        } else if (e.key === 'ArrowRight') {
-            tetrominoStore.moveRight();
-            e.preventDefault()
-        } else if (e.key === " ") {
-            tetrominoStore.moveBottom();
-            if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
-                gameManager.restart();
-            e.preventDefault()
+    const eventListenerRef = ref<((e: KeyboardEvent) => void) | null>(null);
+
+    const createEventListener = () => {
+        const handler = (e: KeyboardEvent) => {
+            const gameManager = useGameManager();
+            const tetrominoStore = useTetrominoStore();
+            const boardStore = useBoardStore();
+            if (e.key === 'ArrowUp') {
+                console.log("ROTATE");
+                tetrominoStore.rotate();
+                e.preventDefault()
+            } else if (e.key === 'ArrowDown') {
+                tetrominoStore.moveDown();
+                console.log("MOVE DOWN");
+                if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
+                    gameManager.restart();
+                e.preventDefault()
+            } else if (e.key === 'ArrowLeft') {
+                console.log("MOVE LEFT");
+                tetrominoStore.moveLeft();
+                e.preventDefault()
+            } else if (e.key === 'ArrowRight') {
+                console.log("MOVE RIGHT");
+                tetrominoStore.moveRight();
+                e.preventDefault()
+            } else if (e.key === " ") {
+                console.log("SPACE");
+                tetrominoStore.moveBottom();
+                if (tetrominoStore.maxRow() < boardStore.maxIsFilled())
+                    gameManager.restart();
+                e.preventDefault()
+            }
         }
+        eventListenerRef.value = handler;
+        console.log("eventListenerRef is now:", !!eventListenerRef.value); // Ajout de log
+        return handler;
     }
 
     const handleTouchStart = () => {
@@ -51,7 +63,9 @@ export const useKeyboardManager = () => {
     }
 
     const init = () => {
-        window.addEventListener('keydown', eventListener);
+        const handler = createEventListener();
+        window.addEventListener('keydown', handler);
+        console.log("Init - handler created:", !!handler);
         const boardStore = useBoardStore();
         const tetrominoStore = useTetrominoStore();
         const gameManager = useGameManager();
@@ -88,14 +102,20 @@ export const useKeyboardManager = () => {
     const reset = () => {
         const boardStore = useBoardStore();
 
-        window.removeEventListener('keydown', eventListener);
+        console.log("RESET");
+        console.log("eventListenerRef is now:", !!eventListenerRef.value); // Ajout de log
+        if (eventListenerRef.value) {
+            console.log("REMOVE KEYDOWN");
+            window.removeEventListener('keydown', eventListenerRef.value);
+        }
         boardStore.refBoard?.removeEventListener('touchstart', handleTouchStart);
         boardStore.refBoard?.removeEventListener('touchend', handleTouchEnd);
     }
 
     return {
         init,
-        reset
+        reset,
+        eventListenerRef
     }
 
 }
