@@ -12,7 +12,7 @@ export const useGameManager = () => {
     const gameState = useGameStateStore();
     const userStore = useUserStore();
     const socketStore = useSocketStore();
-    const keyboardManager = useKeyboardManager();
+    // const keyboardManager = useKeyboardManager();
 
     const init = () => {
         const route = useRoute();
@@ -22,8 +22,7 @@ export const useGameManager = () => {
         tetrominoStore.updateTetrominos(game.tetrominos);
         tetrominoStore.init();
         boardStore.initBoard();
-        keyboardManager.init();
-        console.log("INIT EVENT LISTENER :", !!keyboardManager.eventListenerRef.value);
+        // keyboardManager.init();
         gameState.init();
         gameState.setInfoGame(game);
         launchUpdate();
@@ -63,12 +62,11 @@ export const useGameManager = () => {
     }
 
     const reset = () => {
-        console.log("RESET EVENT LISTENER :", !!keyboardManager.eventListenerRef.value);
 
         stop();
         boardStore.reset();
         tetrominoStore.reset();
-        keyboardManager.reset();
+        // keyboardManager.reset();
         userStore.reset();
     }
 

@@ -54,6 +54,6 @@ export const useGameStateStore = defineStore('gameStateStore', () => {
         intervalId,
         updateIntervalId,
         isEndGame,
-        setIsEndGame
+        setIsEndGame,
     }
 })

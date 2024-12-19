@@ -3,19 +3,20 @@ import Tetris from "~/components/game/Tetris.vue";
 import InfoBoard from "~/components/game/InfoBoard.vue";
 import ListOpponents from "~/components/game/ListOpponents.vue";
 import MessagePenalty from "~/components/game/MessagePenalty.vue";
-import {useGameManager} from "#imports";
+import {useGameManager, useKeyboardManager} from "#imports";
 import {onMounted, onBeforeUnmount} from "vue";
 
 const gameManager = useGameManager();
+const keyboardManager = useKeyboardManager();
 
 onMounted(() => {
-  console.log("INIT GAME");
   gameManager.init();
+  keyboardManager.init()
 })
 
 onBeforeUnmount(() => {
-  console.log("RESET GAME");
   gameManager.reset();
+  keyboardManager.reset();
 })
 
 </script>
