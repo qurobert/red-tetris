@@ -8,11 +8,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {computed, onUnmounted, ref, watch} from "vue";
+import {onUnmounted, ref, watch} from "vue";
 import {Button} from "~/components/ui/button";
 import HeaderTableRoom from "~/components/home/Header.vue";
 import DialogJoin from "~/components/home/DialogJoin.vue";
-import {useAsyncData} from "#app";
 import {useAsyncState} from "@vueuse/core";
 
 const {state , isReady} = useAsyncState(await $fetch('http://localhost:3000/games'), [] as any[]);

@@ -47,7 +47,7 @@ function handleUpdate(newPage: number) {
       </TableRow>
     </TableBody>
   </Table>
-  <div class="flex flex-col items-center">
+  <div class="flex flex-col items-center absolute bottom-0 left-0 w-full m-4">
     <p class="my-4 text-muted-foreground text-sm">
       Page {{ page }} of {{ Math.ceil(lobbyStore.players.length / itemsPerPage) }} ({{ lobbyStore.players.length }} players)
     </p>

@@ -189,23 +189,30 @@ io.on('connection', (socket) => {
         }
     })
 
-    // socket.on('leave-lobby', (gameId: string) => {
-    //     console.log("LEAVE LOBBY");
-    //     const game = gameRooms.get(gameId);
-    //     if (!game) return;
-    //
-    //     const player = game.players.find(p => p.id === socket.id);
-    //     if (!player) return;
-    //
-    //     game.removePlayer(socket.id);
-    //     socket.leave(gameId);
-    //
-    //     if (game.players.length === 0) {
-    //         gameRooms.delete(gameId);
-    //     } else {
-    //         io.to(gameId).emit('game-updated', game.toJSON());
-    //     }
-    // })
+    socket.on('leave-lobby', (gameId: string) => {
+        console.log("LEAVE LOBBY");
+        socket.leave(gameId);
+        // @ts-ignore
+        for (const [gameId, game] of gameRooms.entries()) {
+            const playerIndex = game.players.findIndex(p => p.id === socket.id);
+            if (playerIndex !== -1) {
+                game.removePlayer(socket.id);
+
+                // If no players left, remove the game
+                if (game.players.length === 0) {
+                    gameRooms.delete(gameId);
+                } else {
+                    // If host disconnects, assign new host
+                    if (!game.players.some(p => p.isHost)) {
+                        game.players[0].isHost = true;
+                    }
+
+                    io.to(gameId).emit('game-updated', game.toJSON());
+                }
+            }
+        }
+    })
+
     socket.on('disconnect', () => {
         // Remove player from all games
         console.log('player disconnected:');

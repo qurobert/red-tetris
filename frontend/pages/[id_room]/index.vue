@@ -4,7 +4,7 @@ import ListPlayersWithPagination from "~/components/lobby/ListPlayersWithPaginat
 import ActionsLobby from "~/components/lobby/ActionsLobby.vue";
 import DialogEndGame from "~/components/lobby/DialogEndGame.vue";
 import {onMounted} from "vue";
-import {onBeforeRouteLeave, useRouter} from "#app";
+import {onBeforeRouteLeave, useRoute, useRouter} from "#app";
 import {useSocketStore} from "~/stores/useSocket";
 
 const lobbyStore = useLobbyStore();
@@ -17,10 +17,16 @@ onMounted(() => {
   }
 })
 
-// onBeforeRouteLeave(() => {
-//   const socketStore = useSocketStore();
-//   socketStore.socket.emit('leave-lobby');
-// })
+onBeforeRouteLeave((to, from, next) => {
+  const socketStore = useSocketStore();
+  const route = useRoute();
+  if (to.path === '/') {
+    console.log("go to home");
+    socketStore.socket.emit('leave-lobby', route.params.id_room);
+  }
+  next();
+})
+
 </script>
 
 <template>
