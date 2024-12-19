@@ -44,6 +44,13 @@ export class GameService {
         this.status = 'playing';
     }
 
+    resetGame() {
+        this.status = 'waiting';
+        this.tetrominos = this.generateTetrominos();
+        this.currentPenalties = null;
+        this.players.forEach(player => player.reset());
+    }
+
     handlePenalty(player: PlayerService, linesCleared: number) {
         if (linesCleared >= 2) {
             const penaltyLines = 1 + (linesCleared - 2);

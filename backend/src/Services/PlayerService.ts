@@ -18,6 +18,11 @@ export class PlayerService {
         this.isHost = isHost;
         this.hasFinishedGame = false;
     }
+    reset() {
+        this.board = [];
+        this.currentScore = 0;
+        this.hasFinishedGame = false;
+    }
 
     updateScore(score: number) {
         this.currentScore = score;

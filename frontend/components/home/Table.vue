@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {computed, ref, watch} from "vue";
+import {computed, onUnmounted, ref, watch} from "vue";
 import {Button} from "~/components/ui/button";
 import HeaderTableRoom from "~/components/home/Header.vue";
 import DialogJoin from "~/components/home/DialogJoin.vue";
@@ -22,6 +22,20 @@ const games = ref(null as any[] | null);
 watch(state, (newState) => {
   games.value = newState;
 })
+
+const intervalId = setInterval(async () => {
+  try {
+    console.log("PING");
+    const newGames : any[] = await $fetch('http://localhost:3000/games');
+    games.value = newGames;
+  } catch (error) {
+    console.error('Erreur lors de la mise à jour des jeux:', error);
+  }
+}, 1500);
+
+onUnmounted(() => {
+  clearInterval(intervalId);
+});
 
 function updateGames(newGames: any[]) {
   games.value = newGames;

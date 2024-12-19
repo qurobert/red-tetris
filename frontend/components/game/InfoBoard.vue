@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import {NameTetromino, useInfoTetromino} from "~/composables/useInfoTetromino";
+import {useInfoTetromino} from "~/composables/useInfoTetromino";
 import {ModePosition, useTetrominoStore} from "~/stores/tetromino";
 import Blocks from "~/components/game/utility/Blocks.vue";
 import {useUserStore} from "~/stores/user";
-import {useGameManager} from "~/composables/useGameManager";
 import {computed} from "vue";
 
 const userStore = useUserStore();
@@ -33,12 +32,6 @@ const tetromino = computed(() => {
         Score
       </h2>
       {{userStore.score}}
-    </div>
-    <div class="text-center">
-      <h2 class="text-lg mb-2 text-center font-bold">
-        Rank
-      </h2>
-      #{{userStore.rank}}
     </div>
     <div class="text-center">
       <h2 class="text-lg mb-2 text-center font-bold">

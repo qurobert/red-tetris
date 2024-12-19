@@ -4,7 +4,8 @@ import ListPlayersWithPagination from "~/components/lobby/ListPlayersWithPaginat
 import ActionsLobby from "~/components/lobby/ActionsLobby.vue";
 import DialogEndGame from "~/components/lobby/DialogEndGame.vue";
 import {onMounted} from "vue";
-import {useRouter} from "#app";
+import {onBeforeRouteLeave, useRouter} from "#app";
+import {useSocketStore} from "~/stores/useSocket";
 
 const lobbyStore = useLobbyStore();
 
@@ -14,6 +15,11 @@ onMounted(() => {
   if (!lobbyStore.players.length) {
     router.push('/');
   }
+})
+
+onBeforeRouteLeave(() => {
+  const socketStore = useSocketStore();
+  socketStore.socket.emit('leave-lobby');
 })
 </script>
 
