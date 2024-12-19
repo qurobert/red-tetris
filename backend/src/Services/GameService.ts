@@ -41,9 +41,6 @@ export class GameService {
     }
 
     startGame() {
-        if (this.players.length < 2) {
-            throw new Error('Not enough players to start the game');
-        }
         this.status = 'playing';
     }
 

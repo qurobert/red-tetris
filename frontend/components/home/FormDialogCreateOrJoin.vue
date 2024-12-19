@@ -35,6 +35,7 @@ const onSubmit = form.handleSubmit(async ({name}) => {
     return ;
   userStore.updatePlayerName(name);
   if (props.modeRoom === ModeRoom.create) {
+    console.log("CREATE GAME");
     socketStore.socket.emit('create-game', name, userStore.highScore);
   } else {
     userStore.setIsAdmin(false);

@@ -26,6 +26,7 @@ export const useSocketStore = defineStore('socketStore', () => {
         })
 
         socket.value.on('game-update', (data: any) => {
+            console.log("GAME UPDATE", data);
             const gameState = useGameStateStore();
 
             gameState.setInfoGame(data);
@@ -39,6 +40,7 @@ export const useSocketStore = defineStore('socketStore', () => {
         });
 
         socket.value.on('game-created', (game: any) => {
+            console.log("GAME CREATED", game.id);
             userStore.setIsAdmin(true);
 
             const lobbyStore = useLobbyStore()
@@ -47,11 +49,19 @@ export const useSocketStore = defineStore('socketStore', () => {
         })
 
         socket.value.on('game-updated', (game: any) => {
+            console.log("UPDATED GAME", game);
+            if (game.host === userStore.player_name) {
+                console.log('I"m admin now');
+                userStore.setIsAdmin(true);
+            } else {
+                userStore.setIsAdmin(false);
+            }
             const lobbyStore = useLobbyStore()
             lobbyStore.updatePlayers(game.players);
         });
 
         socket.value.on('game-joined', (game: any) => {
+            console.log("JOINED GAME");
             const lobbyStore = useLobbyStore();
             lobbyStore.updatePlayers(game.players);
             userStore.setIsAdmin(false);

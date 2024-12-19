@@ -6,20 +6,22 @@ import {useSocketStore} from "~/stores/useSocket";
 const userStore = useUserStore();
 
 function goToGame() {
-  const router = useRouter();
-  const route = router.currentRoute.value.fullPath;
+  // const router = useRouter();
+  // const route = router.currentRoute.value.fullPath;
 
-  router.push(`${route}/${userStore.player_name}`);
+   // console.log("GO TO GAME");
+  // router.push(`${route}/${userStore.player_name}`);
 }
 
 function startGame() {
   const socketStore = useSocketStore();
   const route = useRoute();
+  console.log("START GAME");
   socketStore.socket.emit('start-game',
       route.params.id_room
   );
 
-  goToGame();
+  // goToGame();
 }
 </script>
 

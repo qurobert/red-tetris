@@ -17,7 +17,6 @@ function goToHome() {
   gameStateStore.setIsEndGame(false)
   router.push('/')
 }
-console.log(gameStateStore.gameOver)
 </script>
 
 <template>

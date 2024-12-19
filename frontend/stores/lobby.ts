@@ -5,6 +5,7 @@ export const useLobbyStore = defineStore('lobbyStore', () => {
   const players = ref([] as any[]);
 
   const updatePlayers = (value: any[]) => {
+    console.log("UPDATE PLAYERS", value);
     players.value = value;
 }
 

@@ -122,6 +122,7 @@ io.on('connection', (socket) => {
   socket.on('game-update', (gameId: string, gameState: GameState) => {
     const game = gameRooms.get(gameId);
     if (!game) return;
+    console.log("TEST");
 
     const index = game.players.findIndex(p => p.id === socket.id);
     if (!game.players[index]) return;

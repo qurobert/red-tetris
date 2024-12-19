@@ -9,6 +9,7 @@ import {onMounted, onUnmounted} from "vue";
 const gameManager = useGameManager();
 
 onMounted(() => {
+  console.log("INIT GAME");
   gameManager.init();
 })
 
