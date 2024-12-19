@@ -23,7 +23,7 @@ export const useGameManager = () => {
         tetrominoStore.init();
         boardStore.initBoard();
         keyboardManager.init();
-        gameState.reset();
+        gameState.init();
         gameState.setInfoGame(game);
         launchUpdate();
     }
@@ -62,11 +62,9 @@ export const useGameManager = () => {
     }
 
     const reset = () => {
-        console.log("RESET");
         stop();
         boardStore.reset();
         tetrominoStore.reset();
-        gameState.reset();
         keyboardManager.reset();
         userStore.reset();
     }

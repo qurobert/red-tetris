@@ -29,6 +29,11 @@ export const useGameStateStore = defineStore('gameStateStore', () => {
     const updateIntervalId = (newIntervalId: string | null)=> {
         intervalId.value = newIntervalId;
     }
+    const init = () => {
+        gameOver.value = false;
+        isEndGame.value = false;
+    }
+
     const setGameOver = () => {
         gameOver.value = true;
     }
@@ -40,17 +45,12 @@ export const useGameStateStore = defineStore('gameStateStore', () => {
     const setInfoGame = (game: Game) => {
         infoGame.value = game;
     }
-    const reset = () => {
-        gameOver.value = false;
-        infoGame.value = {} as Game;
-    }
-
     return {
+        init,
         gameOver,
         setGameOver,
         setInfoGame,
         infoGame,
-        reset,
         intervalId,
         updateIntervalId,
         isEndGame,

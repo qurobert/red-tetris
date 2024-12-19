@@ -5,7 +5,7 @@ import {useGameManager} from "~/composables/useGameManager";
 import {useGameStateStore} from "~/stores/gameState";
 import {useUserStore} from "~/stores/user";
 import {useLobbyStore} from "~/stores/lobby";
-import {useRouter} from "#app";
+import {useRoute, useRouter} from "#app";
 import {useBoardStore} from "~/stores/board";
 
 export const useSocketStore = defineStore('socketStore', () => {
@@ -66,8 +66,15 @@ export const useSocketStore = defineStore('socketStore', () => {
 
         socket.value.on('game-over', () => {
             const gameStateStore = useGameStateStore();
+            const route = useRoute();
+
             gameStateStore.setIsEndGame(true);
-            router.push('/');
+            router.push({
+                name: 'id_room',
+                params: {
+                    id_room: route.params.id_room
+                }
+            })
         })
 
     })
