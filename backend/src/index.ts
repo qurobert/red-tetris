@@ -177,7 +177,7 @@ io.on('connection', (socket) => {
         io.to(gameId).emit('game-updated', game.toJSON());
 
         const players = getInGamePlayers(game).length
-        if (players === 1) {
+        if (players <= 1) {
             gameRooms.delete(gameId);
             io.to(gameId).emit('game-over', game.toJSON());
         }
