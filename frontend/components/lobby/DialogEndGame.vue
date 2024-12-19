@@ -10,7 +10,7 @@ import {Separator} from "~/components/ui/separator";
 import {useGameStateStore} from "~/stores/gameState";
 import {useRouter} from "#app";
 
-const gameStateStore = useGameStateStore()
+const gameStateStore = useGameStateStore();
 function goToHome() {
   const router = useRouter();
 
@@ -24,7 +24,10 @@ function goToHome() {
     <DialogContent>
       <DialogHeader>
         <DialogTitle>
-          <span v-if="!gameStateStore.gameOver">
+          <span v-if="gameStateStore.infoGame.players.length === 1">
+            Try again...
+          </span>
+          <span v-else-if="!gameStateStore.gameOver">
             You won !
           </span>
           <span v-else>

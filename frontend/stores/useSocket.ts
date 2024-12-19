@@ -50,13 +50,16 @@ export const useSocketStore = defineStore('socketStore', () => {
 
         socket.value.on('game-updated', (game: any) => {
             console.log("UPDATED GAME", game);
+
             if (game.host === userStore.player_name) {
-                console.log('I"m admin now');
                 userStore.setIsAdmin(true);
             } else {
                 userStore.setIsAdmin(false);
             }
-            const lobbyStore = useLobbyStore()
+            const lobbyStore = useLobbyStore();
+            const gameStateStore = useGameStateStore();
+
+            gameStateStore.setInfoGame(game);
             lobbyStore.updatePlayers(game.players);
         });
 
