@@ -75,6 +75,8 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         positions.value = {} as InfoPositionTetromino;
         refColor.value = '';
         modePosition.value = ModePosition.rotate0;
+        indexNameTetromino.value = 0;
+        lettersTetrominos.value = [];
     }
 
 
