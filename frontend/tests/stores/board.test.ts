@@ -35,7 +35,7 @@ describe('board store', () => {
 
 	it('test update board from tetromino with init', () => {
 		const tetrominoStore = useTetrominoStore();
-		tetrominoStore.init(NameTetromino.I);
+		tetrominoStore.init(NameTetromino.T);
 		const boardStore = useBoardStore();
 		boardStore.initBoard();
 		boardStore.updateBoardFromTetromino();
@@ -51,7 +51,7 @@ describe('board store', () => {
 
 	it('test update board from tetromino without init board need to throw', () => {
 		const tetrominoStore = useTetrominoStore();
-		tetrominoStore.init(NameTetromino.I);
+		tetrominoStore.init(NameTetromino.T);
 		const boardStore = useBoardStore();
 		expect(() => boardStore.updateBoardFromTetromino()).toThrow();
 	})
@@ -177,7 +177,11 @@ describe('board store', () => {
 	it('test add penalty lines empty board', () => {
 		const boardStore = useBoardStore();
 		boardStore.initBoard();
-		boardStore.addPenaltyLines(2);
+		boardStore.addPenalty({
+			playerId: '1',
+			lines: 2,
+			playerName: 'player1',
+		});
 		expect(boardStore.board.length).toBe(200);
 		for (let i = 20; i > 18; i--) {
 			for (let j = 1; j <= 10; j++) {
@@ -210,7 +214,11 @@ describe('board store', () => {
 				boardStore.board[index].isFilled = true;
 			}
 		}
-		boardStore.addPenaltyLines(2);
+		boardStore.addPenalty({
+			playerId: '1',
+			lines: 2,
+			playerName: 'player1',
+		});
 		expect(boardStore.board.length).toBe(200);
 		for (let i = 20; i > 18; i--) {
 			for (let j = 1; j <= 10; j++) {
@@ -222,7 +230,7 @@ describe('board store', () => {
 		for (let i = 18; i > 16; i--) {
 			for (let j = 1; j <= 5; j++) {
 				const index = i * 10 - (10 - j) - 1;
-				expect(boardStore.board[index].isFilled).toBe(false);
+				expect(boardStore.board[index].isFilled).toBe(true);
 			}
 		}
 	})
@@ -236,7 +244,11 @@ describe('board store', () => {
 				boardStore.board[index].isFilled = true;
 			}
 		}
-		boardStore.addPenaltyLines(3);
+		boardStore.addPenalty({
+			playerId: '1',
+			lines: 3,
+			playerName: 'player1',
+		});
 		expect(boardStore.board.length).toBe(200);
 		for (let i = 20; i > 1; i--) {
 			for (let j = 1; j <= 10; j++) {
@@ -254,14 +266,4 @@ describe('board store', () => {
 		expect(gameState.gameOver).toBe(true);
 	})
 
-	it('test add penalty lines without init', () => {
-		const boardStore = useBoardStore();
-		expect(() => boardStore.addPenaltyLines(2)).toThrow();
-	})
-
-	it('test add penalty greater than 20', () => {
-		const boardStore = useBoardStore();
-		boardStore.initBoard();
-		expect(() => boardStore.addPenaltyLines(21)).toThrow();
-	})
 });

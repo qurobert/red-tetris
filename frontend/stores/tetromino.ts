@@ -43,8 +43,8 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
             indexNameTetromino.value = 0;
         }
     }
-    const init = () => {
-        const name = lettersTetrominos.value[indexNameTetromino.value];
+    const init = (default_name?: NameTetromino ) => {
+        const name = default_name ? default_name : lettersTetrominos.value[indexNameTetromino.value];
         const infoTetromino = useInfoTetromino();
         const position = infoTetromino.getPosition(name, colPosition.value, rowPosition.value);
         const color = infoTetromino.getColor(name);
@@ -54,8 +54,8 @@ export const useTetrominoStore = defineStore('tetrominoStore', () => {
         refColor.value = color;
     }
 
-    const tryToSpawn = () => {
-        const name = lettersTetrominos.value[indexNameTetromino.value];
+    const tryToSpawn = (defaultName?: NameTetromino) => {
+        const name = defaultName ? defaultName : lettersTetrominos.value[indexNameTetromino.value];
         const infoTetromino = useInfoTetromino();
         const newPositions = infoTetromino.getPosition(name, 4, 1);
         if (!verifyNewPosition(newPositions['rotate0'])) return false;

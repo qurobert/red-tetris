@@ -13,7 +13,11 @@ export const useSocketStore = defineStore('socketStore', () => {
     const router = useRouter();
     const userStore = useUserStore();
 
+    const updateSocket = (newSocket: any) => {
+        socket.value = newSocket;
+    }
     socket.value.on('connect', () => {
+        console.log("CONNECT FRONTEND")
         socket.value.on('info-game', (game: any) => {
             console.log("INFO GAME");
             const gameManager = useGameManager();
@@ -98,6 +102,7 @@ export const useSocketStore = defineStore('socketStore', () => {
 
     })
     return {
-        socket
+        socket,
+        updateSocket
     };
 });

@@ -16,6 +16,7 @@ export const useGameManager = () => {
 
     const init = () => {
         const route = useRoute();
+        console.log("EMIT INFO GAME");
         socketStore.socket.emit('info-game', route.params.id_room);
     }
     const start = (game: any) => {

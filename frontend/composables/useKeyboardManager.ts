@@ -112,9 +112,9 @@ export const useKeyboardManager = () => {
     return {
         init,
         reset,
-        eventListenerTouch,
         handleTouchStart,
-        handleTouchEnd
+        handleTouchEnd,
+        eventListenerTouch
     }
 
 }

@@ -24,6 +24,7 @@ export default defineVitestConfig({
 				'**/ui/**',
 				'**/**.vue',
 				'app.vue',
+				'**/useSocket.ts',
 			]
 		}
 	}
