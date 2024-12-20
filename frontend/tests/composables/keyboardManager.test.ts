@@ -77,4 +77,19 @@ describe('keyboard manager', () => {
 		expect(tetroStore.rowPosition).toBe(18);
 
 	})
+
+	it('test reset', () => {
+		const keyBoardManager = useKeyboardManager();
+		const tetroStore = useTetrominoStore();
+		const boardStore = useBoardStore();
+		tetroStore.init(NameTetromino.T);
+		boardStore.initBoard()
+
+		window.addEventListener('keydown', keyBoardManager.eventListenerTouch)
+		const event = new KeyboardEvent('keydown', { key: 'ArrowDown' });
+		window.dispatchEvent(event);
+		expect(tetroStore.rowPosition).toBe(3);
+		keyBoardManager.reset();
+		expect(tetroStore.rowPosition).toBe(3);
+	})
 })

@@ -31,4 +31,14 @@ describe('game manager', () => {
 		expect(gameState.gameOver).not.toBe(true);
 		expect(gameState.gameOver).not.toBe(true);
 	})
+	it('test reset', () => {
+		const gameManager = useGameManager();
+		vi.useFakeTimers();
+		gameManager.init();
+		vi.advanceTimersByTime(10000000);
+		const gameState = useGameStateStore();
+		expect(gameState.gameOver).not.toBe(true);
+		gameManager.reset();
+		expect(gameState.gameOver).toBe(false);
+	});
 })
